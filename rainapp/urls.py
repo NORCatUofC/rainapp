@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
 
 urlpatterns = [
-    url(r'^events/', include('events.urls')),
+    url(r'^', include('events.urls')),
 ]
