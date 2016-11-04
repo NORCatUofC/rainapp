@@ -1,8 +1,24 @@
 {% extends 'layout.html' %}
+{% load static %}
+{% load jsonify %}
 
 {% block content %}
+    <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
     <div class="container">
-        <h1>test</h1>
-        {{ hourly_precip }}
+        <h1>Chicago Rain</h1>
+        <div class="col-sm-6">
+            <div id="totalRainfallGraph"></div>
+        </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static 'js/total_rainfall_graph.js' %}"></script>
+    <script>
+        var graphData = {{ rainfall_graph | jsonify }};
+        drawTotalRainfall(graphData);
+
+    </script>
 {% endblock %}
