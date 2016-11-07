@@ -4,10 +4,22 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
+
+    <style>
+        #csoMap {
+            height: 380px;
+        }
+
+    </style>
+
     <div class="container">
         <h1>Chicago Rain</h1>
         <div class="col-sm-6">
             <div id="totalRainfallGraph"></div>
+        </div>
+        <div class="col-sm-6">
+            <div id="csoMap"></div>
         </div>
     </div>
 {% endblock %}
@@ -17,8 +29,15 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="{% static 'js/total_rainfall_graph.js' %}"></script>
     <script>
-        var graphData = {{ rainfall_graph | jsonify }};
-        drawTotalRainfall(graphData);
+        var graphData = {{ graph_data | jsonify }};
+        drawTotalRainfall(graphData.total_rainfall_data);
 
     </script>
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script src="{% static 'js/csoMap.js' %}"></script>
+    <script>
+        var csoMap = L.map('csoMap').setView([41.8801, -87.6268], 9);
+        drawCsoMap(graphData.cso_map, csoMap);
+    </script>
+
 {% endblock %}

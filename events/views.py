@@ -2,6 +2,7 @@ import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from csos.models import RiverCso, RiverOutfall
 from events.analyzer import rainfall_graph
 from events.models import HourlyPrecip
 
@@ -17,16 +18,42 @@ def show_date(request, start_stamp, end_stamp):
         start = pd.to_datetime(start_stamp)
         end = pd.to_datetime(end_stamp)
 
-        hp = HourlyPrecip.objects.filter(
-            start_time__gte=start,
-            end_time__lte=end
-        ).values()
-        hourly_precip_dict = list(hp)
+        hourly_precip_dict = list(
+            HourlyPrecip.objects.filter(
+                start_time__gte=start,
+                end_time__lte=end
+            ).values()
+        )
         hourly_precip_df = pd.DataFrame(hourly_precip_dict)
 
         ret_val['total_rainfall'] = hourly_precip_df['precip'].sum()
 
-        ret_val['rainfall_graph'] = rainfall_graph(hourly_precip_df)
+        graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}
+
+        csos_df = pd.DataFrame(
+            list(
+                RiverCso.objects.filter(
+                    open_time__gte=start,
+                    close_time__lte=end
+                ).values()
+            )
+        )
+
+        river_outfall_ids = csos_df['river_outfall_id'].unique()
+        river_outfall_ids = list(river_outfall_ids)
+        river_outfalls = RiverOutfall.objects.filter(
+            id__in=river_outfall_ids,
+            lat__isnull=False
+        )
+
+        csos = []
+        for river_outfall in river_outfalls:
+            csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon})
+
+        cso_map = {'cso_points': csos}
+        graph_data['cso_map'] = cso_map
+
+        ret_val['graph_data'] = graph_data
 
     except ValueError:
         return HttpResponse("Not valid dates")

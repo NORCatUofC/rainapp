@@ -1,3 +1,4 @@
+
 def rainfall_graph(hourly_precip_df):
     time_list = list(hourly_precip_df['start_time'].apply(lambda x: x.strftime("%d/%m %H:%M")))
     hourly_rainfall = list(hourly_precip_df['precip'])
