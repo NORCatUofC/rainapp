@@ -26,7 +26,7 @@ def show_date(request, start_stamp, end_stamp):
         )
         hourly_precip_df = pd.DataFrame(hourly_precip_dict)
 
-        ret_val['total_rainfall'] = hourly_precip_df['precip'].sum()
+        ret_val['total_rainfall'] = "%s inches" % hourly_precip_df['precip'].sum()
 
         graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}
 
@@ -39,16 +39,23 @@ def show_date(request, start_stamp, end_stamp):
             )
         )
 
-        river_outfall_ids = csos_df['river_outfall_id'].unique()
-        river_outfall_ids = list(river_outfall_ids)
-        river_outfalls = RiverOutfall.objects.filter(
-            id__in=river_outfall_ids,
-            lat__isnull=False
-        )
-
         csos = []
-        for river_outfall in river_outfalls:
-            csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon})
+        ret_val['sewage_river'] = 'None'
+
+        if len(csos_df) > 0:
+
+            csos_df['duration'] = (csos_df['close_time'] - csos_df['open_time'])
+            ret_val['sewage_river'] = "%s minutes" % int(csos_df['duration'].sum().seconds / 60)
+
+            river_outfall_ids = csos_df['river_outfall_id'].unique()
+            river_outfall_ids = list(river_outfall_ids)
+            river_outfalls = RiverOutfall.objects.filter(
+                id__in=river_outfall_ids,
+                lat__isnull=False
+            )
+
+            for river_outfall in river_outfalls:
+                csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon})
 
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map

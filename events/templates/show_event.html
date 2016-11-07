@@ -14,10 +14,23 @@
     </style>
 
     <div class="container">
-        <h1>Chicago Rain</h1>
-        <div class="col-sm-6">
-            <div id="totalRainfallGraph"></div>
+        <h1 style="text-align: center">Chicago Rain</h1>
+    </div>
+
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-sm-5">
+                <h3><strong>Total Rainfall:</strong> {{ total_rainfall }}</h3>
+                <h3><strong>High Intensity:</strong> {{ high_intensity }}</h3>
+                <h3><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h3>
+                <h3><strong>Sewage in the River:</strong> {{ sewage_river }}</h3>
+            </div>
+            <div class="col-sm-7">
+                <div id="totalRainfallGraph"></div>
+            </div>
         </div>
+    </div>
+    <div class="container" style="margin-top:90px">
         <div class="col-sm-6">
             <div id="csoMap"></div>
         </div>
