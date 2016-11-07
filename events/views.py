@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from csos.models import RiverCso, RiverOutfall
-from events.analyzer import rainfall_graph
+from events.analyzer import rainfall_graph, find_n_years
 from events.models import HourlyPrecip
 
 
@@ -27,6 +27,13 @@ def show_date(request, start_stamp, end_stamp):
         hourly_precip_df = pd.DataFrame(hourly_precip_dict)
 
         ret_val['total_rainfall'] = "%s inches" % hourly_precip_df['precip'].sum()
+
+        high_intensity = find_n_years(hourly_precip_df)
+        if high_intensity is None:
+            ret_val['high_intensity'] = 'No'
+        else:
+            ret_val['high_intensity'] = "%s inches in %s hours.  A %s-year storm" % (
+                high_intensity['inches'], high_intensity['duration_hrs'], high_intensity['n'])
 
         graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}
 
