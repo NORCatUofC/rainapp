@@ -8,7 +8,9 @@ from events.models import HourlyPrecip
 
 
 def index(request):
-    return HttpResponse("Under Construction")
+    _default_start = '2011-07-22 22:00:00'
+    _default_end = '2011-07-23 10:00:00'
+    return show_date(request, _default_start, _default_end)
 
 
 def show_date(request, start_stamp, end_stamp):
@@ -17,6 +19,9 @@ def show_date(request, start_stamp, end_stamp):
     try:
         start = pd.to_datetime(start_stamp)
         end = pd.to_datetime(end_stamp)
+
+        ret_val['start_date'] = start.strftime("%m/%d/%Y %H:%M")
+        ret_val['end_date'] = end.strftime("%m/%d/%Y %H:%M")
 
         hourly_precip_dict = list(
             HourlyPrecip.objects.filter(
