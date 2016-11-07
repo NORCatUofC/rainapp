@@ -13,7 +13,7 @@ SECRET_KEY = 'v!-@sfj-+!i@18hk%#ip5lwe!bc0*t0c22n5*w&p$s&d3u8i_5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'chicagorains.herokuapp.com']
 
 
 # Application definition
