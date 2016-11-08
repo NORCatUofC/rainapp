@@ -42,14 +42,10 @@ def show_date(request, start_stamp, end_stamp):
 
         graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}
 
-        csos_df = pd.DataFrame(
-            list(
-                RiverCso.objects.filter(
-                    open_time__gte=start,
-                    close_time__lte=end
-                ).values()
-            )
-        )
+        csos_db = RiverCso.objects.filter(open_time__range=(start, end)).values() | RiverCso.objects.filter(
+            close_time__range=(start, end)).values()
+
+        csos_df = pd.DataFrame(list(csos_db))
 
         csos = []
         ret_val['sewage_river'] = 'None'
