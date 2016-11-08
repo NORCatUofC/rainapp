@@ -5,6 +5,7 @@ from django.shortcuts import render
 from csos.models import RiverCso, RiverOutfall
 from events.analyzer import rainfall_graph, find_n_years
 from events.models import HourlyPrecip
+from flooding.models import BasementFloodingEvent
 
 
 def index(request):
@@ -68,9 +69,24 @@ def show_date(request, start_stamp, end_stamp):
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map
 
+        flooding = {}
+
+        flooding_df = pd.DataFrame(
+            list(BasementFloodingEvent.objects.filter(date__gte=start).filter(date__lte=end).values()))
+
+        flooding_df = flooding_df.drop('id', 1).groupby(['unit_id', 'unit_type']).sum()
+        flooding_df.columns = ['value']
+        flooding_df['unit_type'] = flooding_df.index.get_level_values('unit_type')
+        flooding_df['label'] = flooding_df.index.get_level_values('unit_id')
+        flooding = {'wards': flooding_df[flooding_df['unit_type'] == 'ward'].drop('unit_type', 1).to_dict('record'),
+                    'community': flooding_df[flooding_df['unit_type'] == 'community'].drop('unit_type', 1).to_dict(
+                        'record'),
+                    'zip': flooding_df[flooding_df['unit_type'] == 'zip'].drop('unit_type', 1).to_dict('record'),
+                    }
+        graph_data['flooding'] = flooding
         ret_val['graph_data'] = graph_data
 
-    except ValueError:
+    except ValueError as e:
         return HttpResponse("Not valid dates")
 
     ret_val['hourly_precip'] = str(hourly_precip_df.head())

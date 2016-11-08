@@ -43,4 +43,4 @@ class Command(BaseCommand):
 
         db_dir = os.path.join(BASE_DIR, 'db.sqlite3')
         cnx = sqlite3.connect(db_dir)
-        flooding.to_sql('flooding_basementfloodingevent', cnx, if_exists='append', index_label='id')
+        # flooding.to_sql('flooding_basementfloodingevent', cnx, if_exists='append', index_label='id')

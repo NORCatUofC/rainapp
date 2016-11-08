@@ -11,6 +11,17 @@
             height: 380px;
         }
 
+        .axis {
+            font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
     </style>
 
     <div class="container">
@@ -43,6 +54,9 @@
         <div class="col-sm-6">
             <div id="csoMap"></div>
         </div>
+        <div class="col-sm-6">
+            <div id="floodingGraph"></div>
+        </div>
     </div>
 {% endblock %}
 
@@ -70,6 +84,11 @@
     <script>
         var csoMap = L.map('csoMap').setView([41.8801, -87.6268], 9);
         drawCsoMap(graphData.cso_map, csoMap);
+    </script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{% static 'js/floodingBar.js' %}"></script>
+    <script>
+        drawFloodingBar(graphData.flooding_data);
     </script>
 
 {% endblock %}

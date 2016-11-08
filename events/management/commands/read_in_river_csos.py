@@ -27,4 +27,4 @@ class Command(BaseCommand):
         csos = csos.drop('outfall', 1)
         db_dir = os.path.join(BASE_DIR, 'db.sqlite3')
         cnx = sqlite3.connect(db_dir)
-        csos.to_sql('csos_rivercso', cnx, if_exists='append', index_label='id')
+        # csos.to_sql('csos_rivercso', cnx, if_exists='append', index_label='id')

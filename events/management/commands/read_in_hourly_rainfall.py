@@ -25,4 +25,4 @@ class Command(BaseCommand):
         hourly_precip.index = range(len(hourly_precip))
         db_dir = os.path.join(BASE_DIR, 'db.sqlite3')
         cnx = sqlite3.connect(db_dir)
-        hourly_precip.to_sql('events_hourlyprecip', cnx, if_exists='append', index_label='id')
+        # hourly_precip.to_sql('events_hourlyprecip', cnx, if_exists='append', index_label='id')

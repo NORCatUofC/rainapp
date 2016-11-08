@@ -32,4 +32,4 @@ class Command(BaseCommand):
         lake_reversals = pd.DataFrame(lake_reversals)
         db_dir = os.path.join(BASE_DIR, 'db.sqlite3')
         cnx = sqlite3.connect(db_dir)
-        lake_reversals.to_sql('csos_lakereversal', cnx, if_exists='append', index_label='id')
+        # lake_reversals.to_sql('csos_lakereversal', cnx, if_exists='append', index_label='id')
