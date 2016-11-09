@@ -2,25 +2,14 @@ function drawFloodingBar(floodingData, dataType) {
 
     data = floodingData[dataType];
 
-/*
-    data = [
-        {label:"Category 1", value:19},
-        {label:"Category 2", value:5},
-        {label:"Category 3", value:13},
-        {label:"Category 4", value:17},
-        {label:"Category 5", value:19},
-        {label:"Category 6", value:27}
-    ];
-*/
-
     var div = d3.select("#floodingGraph").append("div").attr("class", "toolTip");
 
     var axisMargin = 20,
             margin = 40,
             valueMargin = 4,
+            barHeight = 10,
             width = parseInt(d3.select('body').style('width'), 10),
-            height = parseInt(d3.select('body').style('height'), 10),
-            barHeight = (height-axisMargin-margin*2)* 0.4/data.length,
+            height = barHeight * data.length,
             barPadding = (height-axisMargin-margin*2)*0.6/data.length,
             data, bar, svg, scale, xAxis, labelWidth = 0;
 

@@ -5,6 +5,7 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="{% static 'css/floodingBar.css' %}"/>
 
     <style>
         #csoMap {
@@ -44,6 +45,7 @@
                 <h3><strong>High Intensity:</strong> {{ high_intensity }}</h3>
                 <h3><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h3>
                 <h3><strong>Sewage in the River:</strong> {{ sewage_river }}</h3>
+                <h3><strong>Cases of Basement Flooding Reported:</strong> {{ basement_flooding }}</h3>
             </div>
             <div class="col-sm-7">
                 <div id="totalRainfallGraph"></div>
@@ -54,7 +56,7 @@
         <div class="col-sm-6">
             <div id="csoMap"></div>
         </div>
-        <div class="col-sm-6">
+        <div class="row">
             <div id="floodingGraph"></div>
         </div>
     </div>
@@ -88,7 +90,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="{% static 'js/floodingBar.js' %}"></script>
     <script>
-        drawFloodingBar(graphData.flooding_data);
+        drawFloodingBar(graphData.flooding_data, 'wards');
     </script>
 
 {% endblock %}

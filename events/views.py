@@ -69,8 +69,6 @@ def show_date(request, start_stamp, end_stamp):
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map
 
-        flooding = {}
-
         flooding_df = pd.DataFrame(
             list(BasementFloodingEvent.objects.filter(date__gte=start).filter(date__lte=end).values()))
 
@@ -83,7 +81,8 @@ def show_date(request, start_stamp, end_stamp):
                         'record'),
                     'zip': flooding_df[flooding_df['unit_type'] == 'zip'].drop('unit_type', 1).to_dict('record'),
                     }
-        graph_data['flooding'] = flooding
+        graph_data['flooding_data'] = flooding
+        ret_val['basement_flooding'] = flooding_df[flooding_df['unit_type'] == 'ward']['value'].sum()
         ret_val['graph_data'] = graph_data
 
     except ValueError as e:
