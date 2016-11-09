@@ -72,16 +72,23 @@ def show_date(request, start_stamp, end_stamp):
         flooding_df = pd.DataFrame(
             list(BasementFloodingEvent.objects.filter(date__gte=start).filter(date__lte=end).values()))
 
-        flooding_df = flooding_df.drop('id', 1).groupby(['unit_id', 'unit_type']).sum()
-        flooding_df.columns = ['value']
-        flooding_df['unit_type'] = flooding_df.index.get_level_values('unit_type')
-        flooding_df['label'] = flooding_df.index.get_level_values('unit_id')
-        flooding = {'wards': flooding_df[flooding_df['unit_type'] == 'ward'].drop('unit_type', 1).to_dict('record'),
-                    'community': flooding_df[flooding_df['unit_type'] == 'community'].drop('unit_type', 1).to_dict(
-                        'record'),
-                    'zip': flooding_df[flooding_df['unit_type'] == 'zip'].drop('unit_type', 1).to_dict('record'),
-                    }
-        graph_data['flooding_data'] = flooding
+        # flooding_df = flooding_df.drop('id', 1).groupby(['unit_id', 'unit_type']).sum()
+        # flooding_df.columns = ['value']
+        # flooding_df['unit_type'] = flooding_df.index.get_level_values('unit_type')
+        # flooding_df['label'] = flooding_df.index.get_level_values('unit_id')
+
+        flooding_df = flooding_df.groupby(['unit_id', 'unit_type']).sum()
+
+        flooding_data = {'ward': {
+            "ward_nums":
+        }
+                         : list(flooding_df['count']),
+                         # 'community': flooding_df[flooding_df['unit_type'] == 'community'].drop('unit_type', 1).to_dict(
+                         #     'record'),
+                         # 'zip': flooding_df[flooding_df['unit_type'] == 'zip'].drop('unit_type', 1).to_dict('record'),
+                         'count': list(flooding_df['date'].unique())
+                         }
+        graph_data['flooding_data'] = flooding_data
         ret_val['basement_flooding'] = flooding_df[flooding_df['unit_type'] == 'ward']['value'].sum()
         ret_val['graph_data'] = graph_data
 
