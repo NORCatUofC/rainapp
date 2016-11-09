@@ -57,3 +57,18 @@ def find_n_years(hourly_precip_df):
                         'duration_hrs': duration,
                         'start_time': pd.to_datetime(event.index) - timedelta(hours=duration)}
     return None
+
+
+def build_flooding_data(flooding_df):
+    flooding_df = flooding_df.drop('id', 1).groupby(['unit_id', 'unit_type']).sum()
+    flooding_df['unit_type'] = flooding_df.index.get_level_values('unit_type')
+    flooding_df['label'] = flooding_df.index.get_level_values('unit_id')
+
+    flooding_data = {'community': flooding_df[flooding_df['unit_type'] == 'community'].sort_values(
+        'label').to_dict("record")}
+    flooding_df = flooding_df[flooding_df['unit_type'] != 'community']
+    flooding_df['label'] = flooding_df['label'].apply(lambda x: int(x))
+    flooding_data['wards'] = flooding_df[flooding_df['unit_type'] == 'ward'].sort_values('label').to_dict("record")
+    flooding_data['zip'] = flooding_df[flooding_df['unit_type'] == 'zip'].sort_values('label').to_dict("record")
+
+    return flooding_data

@@ -56,8 +56,15 @@
         <div class="col-sm-6">
             <div id="csoMap"></div>
         </div>
+    </div>
+    <div class="container">
         <div class="row">
-            <div id="floodingGraph"></div>
+            <button class="btn btn-default switchBtn" id="wards">Wards</button>
+            <button class="btn btn-default switchBtn" id="zip">Zip Code</button>
+            <button class="btn btn-default switchBtn" id="community">Communities</button>
+        </div>
+        <div class="row">
+            <div id="floodingGraph" style="height:500px;"></div>
         </div>
     </div>
 {% endblock %}
@@ -90,7 +97,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="{% static 'js/floodingBar.js' %}"></script>
     <script>
-        drawFloodingBar(graphData.flooding_data, 'wards');
+        drawFloodingBar(graphData.flooding_data);
     </script>
 
 {% endblock %}

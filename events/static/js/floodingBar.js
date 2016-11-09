@@ -1,7 +1,34 @@
-function drawTotalRainfall(floodingData) {
+var floodingData = {};
+
+$(document).ready(function () {
+    $('.switchBtn').on('click', function () {
+        var chartType = $(this)[0].id;
+        var chart = $('#floodingGraph').highcharts();
+        chart.update({
+            series: [{
+                name: 'Cases Reported',
+                data: floodingData[chartType].map(function (a) {
+                    return a.count;
+                })
+            }],
+            xAxis: {
+                categories: floodingData[chartType].map(function (a) {
+                    return a.label;
+                }),
+                title: {
+                    text:  chartType.substr(0,1).toUpperCase()+chartType.substr(1)
+                }
+            }
+        });
+    })
+});
+
+
+function drawFloodingBar(floodingDataArg) {
+    floodingData = floodingDataArg;
     $('#floodingGraph').highcharts({
         chart: {
-            type: 'bar'
+            type: 'column'
         },
         title: {
             text: 'Basement Flooding Reported'
@@ -10,19 +37,22 @@ function drawTotalRainfall(floodingData) {
             text: 'Source: <a href="#">311</a>'
         },
         xAxis: {
-            categories: floodingData.dates,
+            categories: floodingData.wards.map(function (a) {
+                return a.label;
+            }),
             title: {
-                text: 'Households reported'
+                text: 'Ward'
             }
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Ward'
+                text: 'Flood cases reported'
             },
             labels: {
                 overflow: 'justify'
-            }
+            },
+            step: 1
         },
         tooltip: {
             valueSuffix: ' houses'
@@ -50,7 +80,9 @@ function drawTotalRainfall(floodingData) {
         },
         series: [{
             name: 'Wards',
-            data: graphData.wards
+            data: floodingData.wards.map(function (a) {
+                return a.count;
+            })
         }]
     });
 }
