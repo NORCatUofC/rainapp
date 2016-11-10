@@ -65,17 +65,12 @@ function drawFloodingBar(floodingDataArg) {
             }
         },
         legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
+            enabled: false
         },
         credits: {
+            enabled: false
+        },
+        exporting: {
             enabled: false
         },
         series: [{

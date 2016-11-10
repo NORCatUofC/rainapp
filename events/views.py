@@ -38,7 +38,7 @@ def show_date(request, start_stamp, end_stamp):
         if high_intensity is None:
             ret_val['high_intensity'] = 'No'
         else:
-            ret_val['high_intensity'] = "%s inches in %s hours.  A %s-year storm" % (
+            ret_val['high_intensity'] = "%s inches in %s hours!<br>  A %s-year storm" % (
                 high_intensity['inches'], high_intensity['duration_hrs'], high_intensity['n'])
 
         graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}

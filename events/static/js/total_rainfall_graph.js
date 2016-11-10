@@ -29,13 +29,19 @@ function drawTotalRainfall(graphDetails) {
         tooltip: {
             shared: true
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
         legend: {
             layout: 'vertical',
             align: 'left',
             x: 120,
             verticalAlign: 'top',
             y: 100,
-            floating: true,
+            floating: false,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
         },
         series: [{
