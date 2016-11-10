@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load jsonify %}
+
+{% block content %}
+    <style>
+        h1,
+        h3 {
+            text-align: center;
+        }
+    </style>
+    <div class="container">
+        <h1>Chicago sewage dumped in Lake Michigan </h1>
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <span id='theCounter' style="text-align:center">0</span> &nbsp;&nbsp;gallons (and counting...)
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="container" style="text-align:center;">
+        <h1>That's</h1>
+
+        <div class="col-sm-4">
+            <h2>70,000</h2>
+            <h4>Olympic Swimming Pools</h4>
+        </div>
+                <div class="col-sm-4">
+            <h2>511</h2>
+            <h4>Lake Genevas (Wisconsin)</h4>
+        </div>
+                <div class="col-sm-4">
+            <h2>166</h2>
+            <h4>Empire State Buildings</h4>
+        </div>
+    </div>
+    <div class="container">
+        <div id="gallonsPerYearChart" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+    </div>
+    <div id="footer" style="margin-top:50px;">
+        Link to source code and data.
+    </div>
+{% endblock %}
+{% block scripts %}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="js/gallonsPerYear.js"></script>
+    <script src="js/swimmingInSewage.js"></script>
+
+    <script>
+        var reversals = [];
+        d3.csv("data/lake_michigan_reversals.csv", function (data) {
+            buildAndDisplayData(data);
+        });
+    </script>
+{% endblock %}
