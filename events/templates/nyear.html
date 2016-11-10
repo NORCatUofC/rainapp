@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load jsonify %}
+
+{% block content %}
+
+    <div class="container">
+        <h1 style="text-align: center;margin-bottom:45px;">The {{ recurrence }}-Year Storm</h1>
+        <div class="row">
+            <div class="col-sm-6">
+                <p>
+                    The {{ recurrence }}-year storm is a means of estimating the likelihood of an event. It is
+                    measured by it's intensity, or number of inches per time minutes/hours/days.<br><br>
+                </p>
+                <h3><strong>A {{ recurrence }}-year storm has a 1/{{ recurrence }} or {{ likelihood }} chance of
+                    happening in a given year.</strong></h3>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

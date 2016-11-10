@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^date/(?P<start_stamp>.+)/(?P<end_stamp>.+)$', views.show_date),
+    url(r'^nyear/(?P<recurrence>.+)', views.nyear),
     url(r'^$', views.index, name='index'),
 ]

@@ -81,3 +81,8 @@ def show_date(request, start_stamp, end_stamp):
 
     ret_val['hourly_precip'] = str(hourly_precip_df.head())
     return render(request, 'show_event.html', ret_val)
+
+
+def nyear(request, recurrence):
+    ret_val = {'recurrence': recurrence, 'likelihood': str(int(1 / int(recurrence) * 100)) + '%'}
+    return render(request, 'nyear.html', ret_val)
