@@ -4,6 +4,12 @@
 
 {% block content %}
 
+    <style>
+        #nyearTable th, #nyearTable td {
+            border-top: none !important;
+        }
+    </style>
+
     <div class="container">
         <h1 style="text-align: center;margin-bottom:45px;">The {{ recurrence }}-Year Storm</h1>
         <div class="row">
@@ -16,7 +22,16 @@
                     happening in a given year.</h3>
             </div>
             <div class="col-sm-6">
-
+                <h4 style="text-align: center">Since 1970, we've had {{ num_occurrences }} {{ reccurence }}-year
+                    storms</h4>
+                <table class="table table-condensed" id="nyearTable">
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.date_formatted }}</td>
+                            <td>{{ event.inches }} inches in {{ event.duration_formatted }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>

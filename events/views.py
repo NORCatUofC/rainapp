@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from csos.models import RiverCso, RiverOutfall
 from events.analyzer import rainfall_graph, find_n_years, build_flooding_data
-from events.models import HourlyPrecip
+from events.models import HourlyPrecip, NYearEvent
 from flooding.models import BasementFloodingEvent
 
 
@@ -84,5 +84,18 @@ def show_date(request, start_stamp, end_stamp):
 
 
 def nyear(request, recurrence):
+    recurrence = int(recurrence)
     ret_val = {'recurrence': recurrence, 'likelihood': str(int(1 / int(recurrence) * 100)) + '%'}
+
+    events = []
+    events_db = NYearEvent.objects.filter(n=recurrence)
+    for event in events_db:
+        date_formatted = event.start_time.strftime("%m/%d/%Y") + "-" + event.end_time.strftime("%m/%d/%Y")
+        duration = str(event.duration_hours) + ' hours' if event.duration_hours <= 24 else str(
+            int(event.duration_hours / 24)) + ' days'
+        events.append({'date_formatted': date_formatted, 'inches': "%.2f" % event.inches,
+                       'duration_formatted': duration})
+    ret_val['events'] = events
+    ret_val['num_occurrences'] = len(events)
+
     return render(request, 'nyear.html', ret_val)
