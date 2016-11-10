@@ -9,8 +9,8 @@ from flooding.models import BasementFloodingEvent
 
 
 def index(request):
-    _default_start = '2011-07-22 22:00:00'
-    _default_end = '2011-07-23 10:00:00'
+    _default_start = '07/22/2011 08:00'
+    _default_end = '07/23/2011 06:00'
     return show_date(request, _default_start, _default_end)
 
 
@@ -72,8 +72,12 @@ def show_date(request, start_stamp, end_stamp):
         flooding_df = pd.DataFrame(
             list(BasementFloodingEvent.objects.filter(date__gte=start).filter(date__lte=end).values()))
 
-        graph_data['flooding_data'] = build_flooding_data(flooding_df)
-        ret_val['basement_flooding'] = flooding_df[flooding_df['unit_type'] == 'ward']['count'].sum()
+        if len(flooding_df) > 0:
+            graph_data['flooding_data'] = build_flooding_data(flooding_df)
+            ret_val['basement_flooding'] = flooding_df[flooding_df['unit_type'] == 'ward']['count'].sum()
+        else:
+            graph_data['flooding_data'] = {}
+            ret_val['basement_flooding'] = 0
         ret_val['graph_data'] = graph_data
 
     except ValueError as e:
@@ -94,7 +98,8 @@ def nyear(request, recurrence):
         duration = str(event.duration_hours) + ' hours' if event.duration_hours <= 24 else str(
             int(event.duration_hours / 24)) + ' days'
         events.append({'date_formatted': date_formatted, 'inches': "%.2f" % event.inches,
-                       'duration_formatted': duration})
+                       'duration_formatted': duration,
+                       'event_url': '/date/%s/%s' % (event.start_time, event.end_time)})
     ret_val['events'] = events
     ret_val['num_occurrences'] = len(events)
 

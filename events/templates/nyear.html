@@ -22,13 +22,16 @@
                     happening in a given year.</h3>
             </div>
             <div class="col-sm-6">
-                <h4 style="text-align: center">Since 1970, we've had {{ num_occurrences }} {{ reccurence }}-year
+                <h4 style="text-align: center">Since 1970, we've had {{ num_occurrences }} {{ recurrence }}-year
                     storms</h4>
                 <table class="table table-condensed" id="nyearTable">
                     {% for event in events %}
                         <tr>
                             <td>{{ event.date_formatted }}</td>
                             <td>{{ event.inches }} inches in {{ event.duration_formatted }}</td>
+                            <td>
+                                <a href="{{ event.event_url }}" class="btn btn-primary btn-xs">See it</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
