@@ -1,8 +1,19 @@
+function showCounter(total, counterStart) {
+
+    var totalStart = (total - counterStart).toLocaleString();
+
+    $('#theCounter').addClass('counter-analog').counter({
+        initial: totalStart,
+        direction: 'up',
+        interval: '1',
+        format: total.toLocaleString(),
+        stop: total.toLocaleString()
+    });
+}
+
 // High charts
 
-
-
-function drawGallonsPerYearChart(years, series) {
+function drawGallonsPerYearChart(events) {
     $('#gallonsPerYearChart').highcharts({
         chart: {
             type: 'bar'
@@ -11,7 +22,7 @@ function drawGallonsPerYearChart(years, series) {
             text: 'Sewage Dumped per Year'
         },
         xAxis: {
-            categories: years
+            categories: events.years
         },
         yAxis: {
             min: 0,
@@ -22,12 +33,18 @@ function drawGallonsPerYearChart(years, series) {
         legend: {
             reversed: true
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        },
         plotOptions: {
             series: {
                 stacking: 'normal'
             }
         },
-        series: series
+        series: events.series
     });
 
 }
