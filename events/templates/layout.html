@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
   <title>Chicago Rain</title>
   <meta charset='utf-8' />
   <!-- Placeholder metadata -->
@@ -54,8 +54,10 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="/nyear/100">100-Year Storm</a></li>
-                <li><a href="{% url 'viz' %}">Events Over Time</a></li>
+                <!-- <li><a href="{% url 'viz' %}">Events Over Time</a></li> -->
                 <li><a href="{% url 'basement_flooding' %}">Basement Flooding</a></li>
+                <li><a href="{% url 'show_data' %}">Impact Over Time</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
                 <!-- <li><a href="#">Sewage in Lake Michigan</a></li> -->
             </ul>
         </div>

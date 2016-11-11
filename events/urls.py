@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^nyear/(?P<recurrence>.+)', views.nyear),
     url(r'^viz$', views.viz_animation, name='viz'),
     url(r'^flooding$', views.basement_flooding, name='basement_flooding'),
-    url(r'^splash$', views.viz_splash, name='splash'),
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.viz_splash, name='splash'),
+    url(r'^show-data$', views.index, name='show_data'),
+    url(r'^about$', views.about, name='about')
 ]

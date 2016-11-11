@@ -113,3 +113,6 @@ def basement_flooding(request):
 
 def viz_splash(request):
     return render(request, 'viz-splash.html')
+
+def about(request):
+    return render(request, 'about.html')
