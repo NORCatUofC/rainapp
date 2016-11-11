@@ -109,8 +109,12 @@ label {
 }
 
 .viz-right {
+  position: absolute;
   left: 50%;
-  width: 50%;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
 }
 
 .table {
@@ -176,8 +180,11 @@ footer {
     display: none;
   }
   .viz-right {
-    left: inherit;
+    left: 0;
+    top: 0;
+    position: relative;
     width: 100%;
+    overflow-y: none;
   }
   #splash-button {
     display: inherit;
