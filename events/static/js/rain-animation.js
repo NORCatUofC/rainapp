@@ -3,7 +3,7 @@ var baseLayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
 });
 
 var map = L.map('map', {
-  center: initialCenter,
+  center: [41.88, -87.73],
   zoom: initialZoom,
   minZoom: 9,
   maxZoom: 16,
@@ -11,12 +11,6 @@ var map = L.map('map', {
 });
 
 map.addLayer(baseLayer);
-
-// Disable dragging on mobile, allow for scroll over map
-if (document.documentElement.clientWidth < 780) {
-  map.dragging.disable();
-  if (map.tap) map.tap.disable();
-}
 
 // Based off of http://bl.ocks.org/pbogden/16417ea36900f44710b2
 // Declare global variables for going through timestamps
