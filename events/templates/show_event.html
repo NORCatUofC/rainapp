@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
     <link rel="stylesheet" href="{% static 'css/floodingBar.css' %}"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
 
     <style>
         #csoMap {
@@ -25,13 +26,25 @@
         <div class="col-md-10 col-md-offset-1">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="startDate">Event Starting on </label>
+                    <!-- <label for="startDate">Event Starting on </label>
                     <input type="text" class="form-control" id="startDate" placeholder="Start Date"
-                           value="{{ start_date }}">
+                           value="{{ start_date }}"> -->
+                     <div class='input-group date'>
+                          <input id='startDate' type='text' class="form-control" placeholder="Start Date" value="{{ start_date }}"/>
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
                 </div>
                 <div class="form-group">
-                    <label for="endDate">thru</label>
-                    <input type="text" class="form-control" id="endDate" placeholder="End Date" value="{{ end_date }}">
+                    <!-- <label for="endDate">thru</label>
+                    <input type="text" class="form-control" id="endDate" placeholder="End Date" value="{{ end_date }}"> -->
+                    <div class='input-group date'>
+                         <input id='endDate' type='text' class="form-control" placeholder="End Date" value="{{ end_date }}"/>
+                         <span class="input-group-addon">
+                             <span class="glyphicon glyphicon-calendar"></span>
+                         </span>
+                     </div>
                 </div>
                 <button class="btn btn-warning" type="button" id="findDatesBtn">View It</button>
             </form>
@@ -41,24 +54,31 @@
 
     <div class="container" style="margin-top:30px;">
         <div class="row">
-            <div class="col-sm-3">
-                <h3><strong>Total Rainfall:</strong> {{ total_rainfall }}</h3>
-                <h3 style="margin-top:30px;"><strong>High Intensity:</strong> {{ high_intensity | safe }}</h3>
-            </div>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
+                <h4><strong>Total Rainfall:</strong> {{ total_rainfall }}</h4>
+                <h4><strong>High Intensity:</strong> {{ high_intensity | safe }}</h4>
                 <div id="totalRainfallGraph"></div>
             </div>
+            <div class="col-sm-6">
+                <h4><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h4>
+                <h4><strong>Sewage in the River:</strong> {{ sewage_river }}</h4>
+                <div id="csoMap"></div>
+            </div>
+            <!-- <div class="col-sm-9">
+                <div id="totalRainfallGraph"></div>
+            </div> -->
         </div>
     </div>
-    <div class="container" style="margin-top:90px">
-        <div class="col0sm-6">
-            <h3><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h3>
-            <h3><strong>Sewage in the River:</strong> {{ sewage_river }}</h3>
+    <!-- <div class="container" style="margin-top:90px">
+        <div class="col-sm-6">
+            <h4><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h4>
+            <h4><strong>Sewage in the River:</strong> {{ sewage_river }}</h4>
+            <div id="csoMap"></div>
         </div>
         <div class="col-sm-6">
             <div id="csoMap"></div>
         </div>
-    </div>
+    </div> -->
     <div class="container">
         <div class="row">
             <button class="btn btn-default switchBtn" id="wards">Wards</button>
@@ -73,15 +93,18 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
     <script>
+        $(function () {
+            $('#startDate').datetimepicker();
+            $('#endDate').datetimepicker();
+        });
         $('#findDatesBtn').on('click', function () {
             var startDate = $('#startDate').val().replace(/\//g, '-');
             var endDate = $('#endDate').val().replace(/\//g, '-');
             window.location.href = "/date/" + startDate + '/' + endDate;
-
         });
-
-
     </script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>

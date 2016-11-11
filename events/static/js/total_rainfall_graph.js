@@ -37,7 +37,7 @@ function drawTotalRainfall(graphDetails) {
         },
         legend: {
             layout: 'vertical',
-            align: 'left',
+            align: 'top',
             x: 120,
             verticalAlign: 'top',
             y: 100,
