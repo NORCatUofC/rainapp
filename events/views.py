@@ -21,6 +21,17 @@ def show_date(request, start_stamp, end_stamp):
         start = pd.to_datetime(start_stamp)
         end = pd.to_datetime(end_stamp)
 
+        if start > end:
+            return HttpResponse("Start time must before end time")
+
+        if (end-start).days > 10:
+            return HttpResponse("Search only on 10 day periods")
+
+    except:
+        return HttpResponse("Not valid dates")
+
+    try:
+
         ret_val['start_date'] = start.strftime("%m/%d/%Y %H:%M")
         ret_val['end_date'] = end.strftime("%m/%d/%Y %H:%M")
 
@@ -80,8 +91,8 @@ def show_date(request, start_stamp, end_stamp):
             ret_val['basement_flooding'] = 0
         ret_val['graph_data'] = graph_data
 
-    except ValueError as e:
-        return HttpResponse("Not valid dates")
+    except:
+        return index(request)
 
     ret_val['hourly_precip'] = str(hourly_precip_df.head())
     return render(request, 'show_event.html', ret_val)
