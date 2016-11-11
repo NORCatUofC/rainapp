@@ -21,6 +21,6 @@ class LakeOutfall(models.Model):
 
 class LakeReversal(models.Model):
     lake_outfall = models.ForeignKey("LakeOutfall")
-    open_date = models.DateField()
-    close_date = models.DateField()
+    open_date = models.DateTimeField()
+    close_date = models.DateTimeField()
     millions_of_gallons = models.FloatField()

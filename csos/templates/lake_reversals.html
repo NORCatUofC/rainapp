@@ -3,6 +3,7 @@
 {% load jsonify %}
 
 {% block content %}
+     <link href="{% static 'sophilabs-counter/jquery.counter-analog.css'%}" media="screen" rel="stylesheet" type="text/css" />
     <style>
         h1,
         h3 {
@@ -45,15 +46,16 @@
 {% endblock %}
 {% block scripts %}
 
+    <script src="{% static 'sophilabs-counter/jquery.counter.js' %}"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="{% static 'js/gallonsPerYear.js' %}"></script>
-    <script src="{% static 'js/swimmingInSewage.js' %}"></script>
 
     <script>
-        var reversals = [];
-        d3.csv("data/lake_michigan_reversals.csv", function (data) {
-            buildAndDisplayData(data);
-        });
+
+        const STARTING_POINT = 1000000;
+        showCounter({{ total_sewage }}, STARTING_POINT);
+        drawGallonsPerYearChart({{ events | jsonify }});
+
     </script>
 {% endblock %}
