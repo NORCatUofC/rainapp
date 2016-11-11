@@ -1,0 +1,148 @@
+html, body {
+  width: 100%;
+}
+
+body {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+/* Reducing Leaflet control z-index so that it's covered by nav */
+.leaflet-top.leaflet-left, .leaflet-top.leaflet-right {
+  z-index: 1;
+}
+
+.navbar-default, div.navbar-header, div.navbar-collapse {
+  background-color: #6095c8;
+  border: none;
+}
+
+.navbar-default .navbar-nav>li>a, .navbar-default a.navbar-brand {
+  color: #F4F4F4;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default a.navbar-brand:hover {
+  color: #dbdbdb;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #F4F4F4;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+  background-color: inherit;
+}
+
+.navbar-default .navbar-toggle, .navbar-header {
+  border: none;
+}
+
+.navbar-collapse>ul>li {
+  text-align: right;
+}
+
+/* Reducing Leaflet control z-index so that it's covered by nav */
+.leaflet-top.leaflet-left, .leaflet-top.leaflet-right {
+  z-index: 1;
+}
+
+.top-legend {
+  top: 50px;
+}
+
+
+label {
+  font-weight: 600;
+}
+
+#info {
+  z-index: 10;
+}
+
+#info p {
+  font-size: 12px;
+}
+
+#info path {
+  fill: #F4F4F4;
+}
+
+#info:hover circle {
+  fill: #565555;
+}
+
+#map {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#info {
+  position: absolute;
+  top: 65px;
+  right: 15px;
+}
+
+.table {
+  margin-bottom: 0;
+  margin-top: 15px;
+}
+
+.table>tbody>tr>td {
+  border-top: none;
+  padding: 5px;
+}
+
+.time-header {
+  text-align: center;
+}
+
+.d3-map path.rain-cell {
+  fill: #000;
+  fill-opacity: 0;
+  stroke: #fff;
+  stroke-width: 0;
+}
+
+#date {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.info {
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  max-width: 450px;
+}
+.info h4 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.info i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.8;
+}
+.info p svg {
+  margin-left: 10px;
+}
+
+footer {
+  height: 25px;
+}
+
+@media (max-width: 400px) {
+  .info {
+    max-width: 250px;
+  }
+}

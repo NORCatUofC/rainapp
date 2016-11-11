@@ -104,3 +104,9 @@ def nyear(request, recurrence):
     ret_val['num_occurrences'] = len(events)
 
     return render(request, 'nyear.html', ret_val)
+
+def viz_animation(request):
+    return render(request, 'viz.html')
+
+def basement_flooding(request):
+    return render(request, 'flooding.html')
