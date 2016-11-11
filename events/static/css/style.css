@@ -1,5 +1,9 @@
-html, body {
+html, body, .main-container {
   width: 100%;
+}
+
+.main-container {
+  height: 100%;
 }
 
 body {
@@ -54,6 +58,19 @@ body {
   top: 50px;
 }
 
+.top-legend.viz-splash {
+  right: 50%;
+}
+
+#info {
+  position: absolute;
+  top: 65px;
+  right: 15px;
+}
+
+#info.viz-splash {
+  right: 52%;
+}
 
 label {
   font-weight: 600;
@@ -83,10 +100,17 @@ label {
   bottom: 0;
 }
 
-#info {
-  position: absolute;
-  top: 65px;
-  right: 15px;
+#map.viz-splash {
+  right: 50%;
+}
+
+#splash-button {
+  display: none;
+}
+
+.viz-right {
+  left: 50%;
+  width: 50%;
 }
 
 .table {
@@ -144,5 +168,20 @@ footer {
 @media (max-width: 400px) {
   .info {
     max-width: 250px;
+  }
+}
+
+@media (max-width: 775px) {
+  #map.viz-splash, #info.viz-splash, .top-legend.viz-splash {
+    display: none;
+  }
+  .viz-right {
+    left: inherit;
+    width: 100%;
+  }
+  #splash-button {
+    display: inherit;
+    text-align: center;
+    font-weight: bold;
   }
 }

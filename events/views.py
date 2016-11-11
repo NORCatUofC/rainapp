@@ -110,3 +110,6 @@ def viz_animation(request):
 
 def basement_flooding(request):
     return render(request, 'flooding.html')
+
+def viz_splash(request):
+    return render(request, 'viz-splash.html')
