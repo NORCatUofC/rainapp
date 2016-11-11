@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% load staticfiles %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+  <title>Chicago Rain</title>
+  <meta charset='utf-8' />
+  <!-- Placeholder metadata -->
+  <meta content="Visualizing the impact of increasing rain intensity across Chicago." name='description' />
+  <!-- Facebook metadata -->
+  <meta content="Chicago Rain" property="og:site_name">
+  <meta content="Chicago Rain" property="og:title">
+  <meta content="website" property="og:type">
+  <meta content="Visualizing the impact of increasing rain intensity across Chicago." property="og:description">
+  <meta content="http://chicagorains.herokuapp.com/" property="og:url">
+  <!-- <meta content="{{ site.url }}{{ site.baseurl }}/img/logo.png" property="og:image"> -->
+  <!-- Twitter metadata -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="Chicago Rain">
+  <!-- <meta name="twitter:creator" content="NORC at the University of Chicago"> -->
+  <meta name="twitter:title" content="Chicago Rain">
+  <meta name="twitter:url" content="http://chicagorains.herokuapp.com/">
+  <meta name="twitter:description" content="Visualizing the impact of increasing rain intensity across Chicago.">
 
-    <title>Chicago's Storms</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous">
-
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700" rel="stylesheet">
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -33,13 +54,17 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="/nyear/100">100-Year Storm</a></li>
+                <li><a href="{% url 'basement_flooding' %}">Basement Flooding</a></li>
                 <li><a href="/csos/reversals">Sewage in Lake Michigan</a></li>
+                <li><a href="{% url 'show_data' %}">Impact Over Time</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
             </ul>
         </div>
     </div>
 </nav>
-
+<div class="container-fluid main-container">
 {% block content %}{% endblock %}
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
