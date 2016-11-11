@@ -3,8 +3,8 @@ var baseLayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
 });
 
 var map = L.map('map', {
-  center: [41.88, -87.93],
-  zoom: 10,
+  center: initialCenter,
+  zoom: initialZoom,
   minZoom: 9,
   maxZoom: 16,
   maxBounds: [[41.0, -88.5], [43.5, -87.0]]
