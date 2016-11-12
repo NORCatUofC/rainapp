@@ -4,7 +4,7 @@ function drawTotalRainfall(graphDetails) {
             zoomType: 'xy'
         },
         title: {
-            text: 'Rainfall'
+            text: null
         },
         xAxis: [{
             categories: graphDetails.time_list,
@@ -21,7 +21,7 @@ function drawTotalRainfall(graphDetails) {
             title: {
                 text: 'Cumulative Rainfall (inches)',
                 style: {
-                    color: Highcharts.getOptions().colors[0]
+                    color: Highcharts.getOptions().colors[1]
                 }
             },
             opposite: true
