@@ -81,7 +81,6 @@ function makeTimeChart(timeChartData) {
     .y0(timeChartHeight)
     .y1(function(d) { return y(d.precip); });
 
-  // x.domain(d3.extent(timeChartData, function (d) { return d.time; }));
   y.domain([0, d3.max(timeChartData, function (d) { return d.precip; })]);
 
   precipChartPath = timeChartSvg.append("path").attr("class", "time-chart precip-data")
@@ -118,7 +117,6 @@ function makeCallTimeChart(callData) {
     .y0(timeChartHeight)
     .y1(function(d) { return y(d.calls); });
 
-  // x.domain(d3.extent(callData, function (d) { return d.time; }));
   y.domain([0, d3.max(callData, function (d) { return d.calls; })]);
 
   callChartPath = timeChartSvg.append("path").attr("class", "time-chart call-data")
@@ -133,7 +131,6 @@ function makeCsoTimeChart(eventData) {
     .y0(timeChartHeight)
     .y1(function(d) { return y(d.events); });
 
-  // x.domain(d3.extent(eventData, function (d) { return d.time; }));
   y.domain([0, d3.max(eventData, function (d) { return d.events; })]);
 
   csoChartPath = timeChartSvg.append("path").attr("class", "time-chart cso-data")
@@ -225,19 +222,16 @@ d3.json("/static/data/chicago_grid.topojson", function(error, grid) {
   }
 });
 
-
-function addCommBboxes() {
-  d3.json("/static/data/comm_bboxes.topojson", function(error, bboxes) {
-    var features = bboxes.objects.comm_bboxes.geometries.map(function(d) {
-      return topojson.feature(bboxes, d);
-    });
-    commAll = topojson.merge(bboxes, bboxes.objects.comm_bboxes.geometries);
-    features.forEach(function(d) {
-      pathBounds[d.properties.comm_area] = d3.geo.bounds(d);
-    });
-    addCallData();
+d3.json("/static/data/comm_bboxes.topojson", function(error, bboxes) {
+  var features = bboxes.objects.comm_bboxes.geometries.map(function(d) {
+    return topojson.feature(bboxes, d);
   });
-}
+  commAll = topojson.merge(bboxes, bboxes.objects.comm_bboxes.geometries);
+  features.forEach(function(d) {
+    pathBounds[d.properties.comm_area] = d3.geo.bounds(d);
+  });
+  addCallData();
+});
 
 // Use Leaflet to implement a D3 geometric transformation.
 function projectPoint(x, y) {
@@ -263,9 +257,6 @@ d3.csv("/static/data/april_2013_grid_15min_mdw.csv", function(data) {
    });
    makeTimeChart(precipChartData);
 });
-
-addCommBboxes();
-addRiverData();
 
 var rainCount = 0.0;
 var rainCountSpan = document.getElementById("rain-counter");
@@ -478,47 +469,46 @@ function addCallData() {
   });
 }
 
-var csoCount = 0;
-var csoCountSpan = document.getElementById('cso-counter');
+d3.json("/static/data/mwrd_riverways.geojson", function(data) {
+  csoData = data;
 
-function addRiverData() {
-  d3.json("/static/data/mwrd_riverways.geojson", function(data) {
-    csoData = data;
+  map.on("viewreset", resetCso);
+  resetCso();
 
-    map.on("viewreset", resetCso);
-    resetCso();
+  function resetCso() {
+    var bounds = path.bounds(data),
+    topLeft = bounds[0],
+    bottomRight = bounds[1];
 
-    function resetCso() {
-      var bounds = path.bounds(data),
-      topLeft = bounds[0],
-      bottomRight = bounds[1];
+    csoSvg.attr("width", bottomRight[0] - topLeft[0])
+      .attr("height", bottomRight[1] - topLeft[1])
+      .style("left", topLeft[0] + "px")
+      .style("top", topLeft[1] + "px");
 
-      csoSvg.attr("width", bottomRight[0] - topLeft[0])
-        .attr("height", bottomRight[1] - topLeft[1])
-        .style("left", topLeft[0] + "px")
-        .style("top", topLeft[1] + "px");
+    csoG.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
-      csoG.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-      if (csoFeature != undefined) {
-        csoFeature.attr("d", path);
-      }
+    if (csoFeature != undefined) {
+      csoFeature.attr("d", path);
     }
-    addEventData();
-  });
-}
+  }
+  addEventData();
+});
+
+var csoCountSpan = document.getElementById('cso-counter');
 
 function addEventData() {
   d3.csv("/static/data/april_2013_cso.csv", function(collection) {
-    var csoFeatures = collection.map(function(d) {
+    var csoFeatures = [];
+    for (var i = 0; i < collection.length; ++i) {
+      var d = collection[i];
       var feature = getSegment(parseInt(d.river_segment_id));
       if (feature !== null) {
+        feature.properties.id = i;
         feature.properties.unixOpen = Math.floor(makeDate(d.open_timestamp)/1000);
         feature.properties.unixClose = Math.floor(makeDate(d.close_timestamp)/1000);
-        return feature;
+        csoFeatures.push(feature);
       }
-      return null;
-    }).filter(function(d) { return d != null; });
+    }
 
     csoChartData = d3.nest()
       .key(function(d) { return roundMinutes(makeDate(d.open_timestamp)); })
@@ -539,14 +529,15 @@ function addEventData() {
     }
 
     function update() {
+      // TODO: some items are very brief, skew data because don't appear
       grab = csoFeatures.filter(function(d){
-        return (d.properties.unixClose >= unixDate)&&(d.properties.unixOpen <= unixDate);
+        return (d.properties.unixOpen <= unixDate)&&(d.properties.unixClose > unixDate);
       });
       filtered = grab;
 
       // Return ID as value, so that even if the timestamp exists already still adds
       csoFeature = csoG.selectAll("path.cso-data")
-        .data(filtered, function(d) { return d.properties.SEGMENT_ID});
+        .data(filtered, function(d) { return d.properties.id; });
 
       csoFeature.enter()
         .append("path")
@@ -557,10 +548,9 @@ function addEventData() {
         .attr("stroke", "url(#animate-gradient)");
 
       countFilter = csoFeatures.filter(function(d) {
-        return (d.properties.unixOpen <= unixDate)&&(d.properties.unixOpen > (unixDate - 900));
+        return (d.properties.unixOpen <= unixDate);
       });
-      csoCount += countFilter.length;
-      csoCountSpan.textContent = csoCount.toString();
+      csoCountSpan.textContent = countFilter.length.toString();
 
       csoFeature.exit()
         .transition()
