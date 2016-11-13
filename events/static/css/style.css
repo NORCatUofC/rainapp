@@ -175,17 +175,12 @@ div.time-chart {
   right: 15px;
   left: 15px;
   height: 100px;
+  background: rgba(255,255,255,0.4);
 }
 
 div.time-chart.viz-splash {
   right: 52%;
   left: 2%;
-}
-
-path.time-chart {
-	stroke: steelblue;
-	stroke-width: 1;
-	fill: steelblue;
 }
 
 .axis.time-chart {
@@ -205,8 +200,23 @@ path.time-chart {
 }
 
 .y.axis.time-chart line, .y.axis path {
-  fill: none;
+  fill: steelblue;
   stroke: #000;
+}
+
+path.time-chart {
+  stroke-width: 2;
+  fill-opacity: 0;
+}
+
+path.precip-data {
+	stroke: steelblue;
+}
+path.call-data {
+  stroke: #c91a1a;
+}
+path.cso-data {
+  stroke: #f39c12;
 }
 
 @media (max-width: 400px) {

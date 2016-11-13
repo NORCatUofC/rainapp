@@ -20,63 +20,73 @@ var svg = d3.select(map.getPanes().overlayPane).append("svg"),
     csoSvg = d3.select(map.getPanes().overlayPane).append("svg"),
     g = svg.append("g").attr("class", "leaflet-zoom-hide"),
     csoG = csoSvg.append("g").attr("class", "leaflet-zoom-hide");
+
+// Geographic path transformation variables
+var transform = d3.geo.transform({point: projectPoint}),
+    path = d3.geo.path().projection(transform);
+var pathBounds = {};
+var commAll;
+
+// Time incrementing variables
 var timeIdx = 0;
 var dataset = [];
 var timeRow = [];
 var dateNotice = document.getElementById("date");
 var unixDate = 1366174800;
-var transform = d3.geo.transform({point: projectPoint}),
-    path = d3.geo.path().projection(transform);
-var pathBounds = {};
-var commAll;
 var intervalStep = 200;
 var intervalArr = [];
-var timeChartDataPoints = [];
+
+// Time chart variables
+var timeChart = document.querySelector(".time-chart");
+var timeChartWidth = timeChart.offsetWidth;
+var timeChartHeight = timeChart.offsetHeight;
+var precipChartData, callChartData, csoChartData;
+var precipChartPath, callChartPath, csoChartPath;
+
+var x = d3.time.scale()
+  .range([0, timeChartWidth]);
+var y = d3.scale.linear()
+  .range([timeChartHeight, 0]);
+// Epoch timestamps for 4/17/2013 and 4/21/2013
+x.domain([new Date(1366200000000), new Date(1366545600000)]);
+
+var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom");
+var yAxis = d3.svg.axis()
+  .scale(y)
+  .orient("left")
+  .ticks(4);
+
+var timeChartSvg = d3.select(".time-chart").append("svg")
+  .attr("width", timeChartWidth)
+  .attr("height", timeChartHeight)
+  .attr("class","time-chart")
+  .append("g");
+
+// define the clipPath
+timeChartSvg.append("clipPath")
+    .attr("id", "line-clip")
+  .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 0)
+    .attr("height", timeChartHeight);
 
 // Line chart addition
 function makeTimeChart(timeChartData) {
-  var timeChart = document.querySelector(".time-chart");
-  timeChartWidth = timeChart.offsetWidth;
-  timeChartHeight = timeChart.offsetHeight;
-
-  var x = d3.time.scale()
-    .range([0, timeChartWidth]);
-
-  var y = d3.scale.linear()
-    .range([timeChartHeight, 0]);
-
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-  var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(4);
-
   var area = d3.svg.area()
+    .interpolate("basis")
     .x(function(d) { return x(d.time); })
     .y0(timeChartHeight)
     .y1(function(d) { return y(d.precip); });
 
-  x.domain(d3.extent(timeChartData, function (d) { return d.time; }));
+  // x.domain(d3.extent(timeChartData, function (d) { return d.time; }));
   y.domain([0, d3.max(timeChartData, function (d) { return d.precip; })]);
 
-  var timeChartSvg = d3.select(".time-chart").append("svg")
-    .attr("width", timeChartWidth)
-    .attr("height", timeChartHeight)
-    .attr("class","time-chart")
-    .append("g");
-
-  var markerLine = timeChartSvg.append('line')
-    .attr('x1', 0)
-    .attr('y1', 0)
-    .attr('x2', 0)
-    .attr('y2', timeChartHeight)
-    .attr("class","markerLine");
-
-  var chartPath = timeChartSvg.append("path").attr("class", "time-chart")
-    .attr("d", area(timeChartData));
+  precipChartPath = timeChartSvg.append("path").attr("class", "time-chart precip-data")
+    .attr("d", area(timeChartData))
+    .attr("clip-path", "url(#line-clip)");
 
   timeChartSvg.append("g")
     .attr("class", "x axis time-chart")
@@ -96,15 +106,40 @@ function makeTimeChart(timeChartData) {
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
     .attr("dy", ".71em")
+    .attr("font-size", "11px")
     .style("text-anchor", "end")
-    .text("Rain (In.)");
+    .text("Rain, Calls, CSOs");
 }
 
-// TODO Add function for resizing chart on window resize
-// TODO add function that changes
+function makeCallTimeChart(callData) {
+  var area = d3.svg.area()
+    .interpolate("basis")
+    .x(function(d) { return x(d.time); })
+    .y0(timeChartHeight)
+    .y1(function(d) { return y(d.calls); });
 
-// x.domain([0, 24]);
-// y.domain([0, 600]);
+  // x.domain(d3.extent(callData, function (d) { return d.time; }));
+  y.domain([0, d3.max(callData, function (d) { return d.calls; })]);
+
+  callChartPath = timeChartSvg.append("path").attr("class", "time-chart call-data")
+    .attr("d", area(callData))
+    .attr("clip-path", "url(#line-clip)");
+}
+
+function makeCsoTimeChart(eventData) {
+  var area = d3.svg.area()
+    .interpolate("basis")
+    .x(function(d) { return x(d.time); })
+    .y0(timeChartHeight)
+    .y1(function(d) { return y(d.events); });
+
+  // x.domain(d3.extent(eventData, function (d) { return d.time; }));
+  y.domain([0, d3.max(eventData, function (d) { return d.events; })]);
+
+  csoChartPath = timeChartSvg.append("path").attr("class", "time-chart cso-data")
+    .attr("d", area(eventData))
+    .attr("clip-path", "url(#line-clip)");
+}
 
 // Gradient pulled from http://www.visualcinnamon.com/2016/05/animate-gradient-imitate-flow-d3.html
 //Container for the gradient
@@ -151,6 +186,12 @@ function makeDate(dateString) {
   return newDate;
 }
 
+function roundMinutes(date) {
+    date.setHours(date.getHours() + Math.round(date.getMinutes()/60));
+    date.setMinutes(0);
+    return date;
+}
+
 d3.json("/static/data/chicago_grid.topojson", function(error, grid) {
   var features = grid.objects.chicago_grid.geometries.map(function(d) {
     return topojson.feature(grid, d);
@@ -184,16 +225,19 @@ d3.json("/static/data/chicago_grid.topojson", function(error, grid) {
   }
 });
 
-d3.json("/static/data/comm_bboxes.topojson", function(error, bboxes) {
-  var features = bboxes.objects.comm_bboxes.geometries.map(function(d) {
-    return topojson.feature(bboxes, d);
+
+function addCommBboxes() {
+  d3.json("/static/data/comm_bboxes.topojson", function(error, bboxes) {
+    var features = bboxes.objects.comm_bboxes.geometries.map(function(d) {
+      return topojson.feature(bboxes, d);
+    });
+    commAll = topojson.merge(bboxes, bboxes.objects.comm_bboxes.geometries);
+    features.forEach(function(d) {
+      pathBounds[d.properties.comm_area] = d3.geo.bounds(d);
+    });
+    addCallData();
   });
-  commAll = topojson.merge(bboxes, bboxes.objects.comm_bboxes.geometries);
-  features.forEach(function(d) {
-    pathBounds[d.properties.comm_area] = d3.geo.bounds(d);
-  });
-  addCallData();
-});
+}
 
 // Use Leaflet to implement a D3 geometric transformation.
 function projectPoint(x, y) {
@@ -208,17 +252,20 @@ d3.csv("/static/data/april_2013_grid_15min_mdw.csv", function(data) {
      // array of all values in order without keys
      return [d["timestamp"], d["midway_precip"]].concat(Object.keys(d).slice(0,-2).map(function(k){return parseFloat(d[k]);}));
    });
-   var timeChartData = data.map(function(d) {
+   precipChartData = data.filter(function(d) {
+     return d.midway_precip > 0;}
+   ).map(function(d) {
      var item = {
        time: makeDate(d.timestamp),
        precip: d.midway_precip
      };
-     timeChartDataPoints.push(item);
      return item;
    });
-   makeTimeChart(timeChartData);
-  //  timeChartSvg.append("path").attr("class", "time-chart").datum(timeChartData);
+   makeTimeChart(precipChartData);
 });
+
+addCommBboxes();
+addRiverData();
 
 var rainCount = 0.0;
 var rainCountSpan = document.getElementById("rain-counter");
@@ -235,6 +282,7 @@ function updateTime() {
     }
     timeRow = dataset[timeIdx];
     var date = makeDate(dataset[timeIdx][0]);
+    d3.select("#line-clip rect").attr("width", x(date));
     unixDate = Math.floor(date/1000);
     dateNotice.innerHTML = "<p>" + date.toLocaleDateString() + "</p><p>" + date.toLocaleTimeString() + "</p>";
     rainCount += parseFloat(dataset[timeIdx][1]);
@@ -384,6 +432,14 @@ function addCallData() {
       d.LatLng = new L.LatLng(loc.y,loc.x);
     });
 
+    callChartData = d3.nest()
+      .key(function(d) { return roundMinutes(makeDate(d.timestamp)); })
+      .rollup(function(v) { return v.length; })
+      .entries(collection)
+      .map(function(d) { return { time: Date.parse(d.key), calls: d.values }; });
+
+    makeCallTimeChart(callChartData);
+
     function update() {
       grab = collection.filter(function(d){
         // Changing unix diff to 15 minutes (900)
@@ -422,33 +478,35 @@ function addCallData() {
   });
 }
 
-d3.json("/static/data/mwrd_riverways.geojson", function(data) {
-  csoData = data;
-
-  map.on("viewreset", resetCso);
-  resetCso();
-
-  function resetCso() {
-    var bounds = path.bounds(data),
-    topLeft = bounds[0],
-    bottomRight = bounds[1];
-
-    csoSvg.attr("width", bottomRight[0] - topLeft[0])
-      .attr("height", bottomRight[1] - topLeft[1])
-      .style("left", topLeft[0] + "px")
-      .style("top", topLeft[1] + "px");
-
-    csoG.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-    if (csoFeature != undefined) {
-      csoFeature.attr("d", path);
-    }
-  }
-  addEventData();
-});
-
 var csoCount = 0;
 var csoCountSpan = document.getElementById('cso-counter');
+
+function addRiverData() {
+  d3.json("/static/data/mwrd_riverways.geojson", function(data) {
+    csoData = data;
+
+    map.on("viewreset", resetCso);
+    resetCso();
+
+    function resetCso() {
+      var bounds = path.bounds(data),
+      topLeft = bounds[0],
+      bottomRight = bounds[1];
+
+      csoSvg.attr("width", bottomRight[0] - topLeft[0])
+        .attr("height", bottomRight[1] - topLeft[1])
+        .style("left", topLeft[0] + "px")
+        .style("top", topLeft[1] + "px");
+
+      csoG.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+      if (csoFeature != undefined) {
+        csoFeature.attr("d", path);
+      }
+    }
+    addEventData();
+  });
+}
 
 function addEventData() {
   d3.csv("/static/data/april_2013_cso.csv", function(collection) {
@@ -461,6 +519,14 @@ function addEventData() {
       }
       return null;
     }).filter(function(d) { return d != null; });
+
+    csoChartData = d3.nest()
+      .key(function(d) { return roundMinutes(makeDate(d.open_timestamp)); })
+      .rollup(function(v) { return v.length; })
+      .entries(collection)
+      .map(function(d) { return {time: Date.parse(d.key), events: d.values };});
+
+    makeCsoTimeChart(csoChartData);
 
     function getSegment(segmentId) {
       var feature = null;
