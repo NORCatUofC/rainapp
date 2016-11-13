@@ -31,6 +31,80 @@ var pathBounds = {};
 var commAll;
 var intervalStep = 200;
 var intervalArr = [];
+var timeChartDataPoints = [];
+
+// Line chart addition
+function makeTimeChart(timeChartData) {
+  var timeChart = document.querySelector(".time-chart");
+  timeChartWidth = timeChart.offsetWidth;
+  timeChartHeight = timeChart.offsetHeight;
+
+  var x = d3.time.scale()
+    .range([0, timeChartWidth]);
+
+  var y = d3.scale.linear()
+    .range([timeChartHeight, 0]);
+
+  var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(4);
+
+  var area = d3.svg.area()
+    .x(function(d) { return x(d.time); })
+    .y0(timeChartHeight)
+    .y1(function(d) { return y(d.precip); });
+
+  x.domain(d3.extent(timeChartData, function (d) { return d.time; }));
+  y.domain([0, d3.max(timeChartData, function (d) { return d.precip; })]);
+
+  var timeChartSvg = d3.select(".time-chart").append("svg")
+    .attr("width", timeChartWidth)
+    .attr("height", timeChartHeight)
+    .attr("class","time-chart")
+    .append("g");
+
+  var markerLine = timeChartSvg.append('line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr('x2', 0)
+    .attr('y2', timeChartHeight)
+    .attr("class","markerLine");
+
+  var chartPath = timeChartSvg.append("path").attr("class", "time-chart")
+    .attr("d", area(timeChartData));
+
+  timeChartSvg.append("g")
+    .attr("class", "x axis time-chart")
+    .attr("transform", "translate(0," + timeChartHeight + ")")
+    .call(xAxis)
+    .append("text")
+    .attr("y", 9)
+    .attr("x", 39)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text("Time");
+
+  timeChartSvg.append("g")
+    .attr("class", "y axis time-chart")
+    .call(yAxis)
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text("Rain (In.)");
+}
+
+// TODO Add function for resizing chart on window resize
+// TODO add function that changes
+
+// x.domain([0, 24]);
+// y.domain([0, 600]);
 
 // Gradient pulled from http://www.visualcinnamon.com/2016/05/animate-gradient-imitate-flow-d3.html
 //Container for the gradient
@@ -134,6 +208,16 @@ d3.csv("/static/data/april_2013_grid_15min_mdw.csv", function(data) {
      // array of all values in order without keys
      return [d["timestamp"], d["midway_precip"]].concat(Object.keys(d).slice(0,-2).map(function(k){return parseFloat(d[k]);}));
    });
+   var timeChartData = data.map(function(d) {
+     var item = {
+       time: makeDate(d.timestamp),
+       precip: d.midway_precip
+     };
+     timeChartDataPoints.push(item);
+     return item;
+   });
+   makeTimeChart(timeChartData);
+  //  timeChartSvg.append("path").attr("class", "time-chart").datum(timeChartData);
 });
 
 var rainCount = 0.0;

@@ -169,6 +169,46 @@ footer {
   height: 25px;
 }
 
+div.time-chart {
+  position: absolute;
+  bottom: 25px;
+  right: 15px;
+  left: 15px;
+  height: 100px;
+}
+
+div.time-chart.viz-splash {
+  right: 52%;
+  left: 2%;
+}
+
+path.time-chart {
+	stroke: steelblue;
+	stroke-width: 1;
+	fill: steelblue;
+}
+
+.axis.time-chart {
+  shape-rendering: crispEdges;
+}
+
+.x.axis.time-chart line {
+  stroke: lightgrey;
+}
+
+.x.axis.time-chart .minor {
+  stroke-opacity: .5;
+}
+
+.x.axis.time-chart path {
+  display: none;
+}
+
+.y.axis.time-chart line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
 @media (max-width: 400px) {
   .info {
     max-width: 250px;
@@ -176,7 +216,10 @@ footer {
 }
 
 @media (max-width: 775px) {
-  #map.viz-splash, #info.viz-splash, .top-legend.viz-splash {
+  #map.viz-splash,
+  #info.viz-splash,
+  .top-legend.viz-splash,
+  .time-chart.viz-splash {
     display: none;
   }
   .viz-right {
