@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
     <link rel="stylesheet" href="{% static 'css/floodingBar.css' %}"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
 
     <style>
         #csoMap {
@@ -23,23 +24,25 @@
     </style>
 
     <div class="container">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-10">
             <form class="form-inline">
                 <div class="form-group">
-                     <div class='input-group date'>
-                          <input id='startDate' type='text' class="form-control" placeholder="Start Date" value="{{ start_date }}"/>
-                          <span class="input-group-addon">
+                    <div class='input-group date'>
+                        <input id='startDate' type='text' class="form-control" placeholder="Start Date"
+                               value="{{ start_date }}"/>
+                        <span class="input-group-addon">
                               <span class="glyphicon glyphicon-calendar"></span>
                           </span>
-                      </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class='input-group date'>
-                         <input id='endDate' type='text' class="form-control" placeholder="End Date" value="{{ end_date }}"/>
-                         <span class="input-group-addon">
+                        <input id='endDate' type='text' class="form-control" placeholder="End Date"
+                               value="{{ end_date }}"/>
+                        <span class="input-group-addon">
                              <span class="glyphicon glyphicon-calendar"></span>
                          </span>
-                     </div>
+                    </div>
                 </div>
                 <button class="btn btn-warning" type="button" id="findDatesBtn">View It</button>
             </form>
@@ -47,20 +50,33 @@
         </div>
     </div>
 
-    <div class="container" style="margin-top:30px;">
-        <div class="row">
-            <div class="col-sm-6">
-                <h4><strong>Total Rainfall:</strong> {{ total_rainfall }}</h4>
-                <h4><strong>High Intensity:</strong> {{ high_intensity | safe }}</h4>
-                <div id="totalRainfallGraph"></div>
-            </div>
-            <div class="col-sm-6">
-                <h4><strong>Sewage Dumped in the Lake:</strong> {{ sewage_lake }}</h4>
-                <h4><strong>Sewage in the River:</strong> {{ sewage_river }}</h4>
-                <div id="csoMap"></div>
+    <div class="container" style="margin-top:10px;">
+        <div class="col-md-4" style="text-align:center;">
+            <div class="row">
+                <div class="col-sm-6 col-md-12" style="margin-top:20px;">
+                    <h2><strong>Total Rainfall</strong></h2>
+                    <h2><span class="label label-default">{{ total_rainfall }}</span></h2>
+
+                </div>
+                <div class="col-sm-6 col-md-12" style="margin-top:20px;">
+                    <h2><strong>High Intensity</strong></h2>
+                    <h3>{{ high_intensity | safe }}</h3>
+
+                </div>
             </div>
         </div>
+        <div class="col-md-8">
+            <div id="totalRainfallGraph"></div>
+        </div>
+
     </div>
+    <div class="container" style="margin-top:50px;">
+        <div class="col-md-8 col-md-offset-2">
+            <h2 style="text-align:center;">Sewage Dumped in the River</h2>
+            <div id="csoMap"></div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="row">
             <h3><strong>Cases of Basement Flooding Reported:</strong> {{ basement_flooding }}</h3>
