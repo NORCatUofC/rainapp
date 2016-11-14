@@ -3,9 +3,6 @@
 {% load jsonify %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/total_rainfall_graph.css' %}"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
-    <link rel="stylesheet" href="{% static 'css/floodingBar.css' %}"/>
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
 
@@ -91,6 +88,7 @@
 {% block scripts %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script>
         $(function () {
             $('#startDate').datetimepicker();
@@ -110,13 +108,12 @@
         drawTotalRainfall(graphData['total_rainfall_data']);
 
     </script>
-    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script src="{% static 'js/csoMap.js' %}"></script>
     <script>
         var csoMap = L.map('csoMap').setView([41.8801, -87.6268], 9);
         drawCsoMap(graphData['cso_map'], csoMap);
     </script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+
     <script src="{% static 'js/floodingBar.js' %}"></script>
     <script>
         drawFloodingBar(graphData['flooding_data']);

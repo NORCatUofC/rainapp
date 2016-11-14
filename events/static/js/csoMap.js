@@ -10,7 +10,8 @@ function drawCsoMap(csoMapData, csoMap) {
 
     for (var i = 0; i < csoPoints.length; i++) {
         var csoPoint = csoPoints[i];
-        var marker = L.marker([csoPoint.lat, csoPoint.lon]).addTo(csoMap);
+        var circle = L.circle([csoPoint.lat, csoPoint.lon], csoPoint.radius, {
+            color:'red',opacity:1,fillColor: 'red',fillOpacity:.5}).addTo(csoMap);
     }
 }
 

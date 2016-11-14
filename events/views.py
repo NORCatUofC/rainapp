@@ -75,7 +75,7 @@ def show_date(request, start_stamp, end_stamp):
             )
 
             for river_outfall in river_outfalls:
-                csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon})
+                csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon, 'radius': 200})
 
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map
