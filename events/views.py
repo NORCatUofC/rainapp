@@ -59,13 +59,9 @@ def show_date(request, start_stamp, end_stamp):
 
         csos_df = pd.DataFrame(list(csos_db))
 
-        csos = []
         ret_val['sewage_river'] = 'None'
 
-        if len(csos_df) > 0:
-
-            csos_dict = build_csos(csos_df)
-            csos = list(csos_dict.values())
+        csos = build_csos(csos_df) if len(csos_df) > 0 else []
 
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map

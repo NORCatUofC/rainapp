@@ -95,7 +95,18 @@ def build_csos(csos_df):
     for index_iter, cso in csos_df.iterrows():
         try:
             csos[cso['river_outfall_id']]['minutes'] += cso['duration']
+            if 'timestamps' not in csos[cso['river_outfall_id']]:
+                csos[cso['river_outfall_id']]['timestamps'] = []
+            csos[cso['river_outfall_id']]['timestamps'].append(str(cso['open_time']) + '-' + str(cso['close_time']))
         except Exception as e:
             # There are some overflows, where we don't have the geography point for it.  Skip them
             pass
+
+    csos = list(csos.values())
+    for index, cso in enumerate(csos):
+        popup = "Total minutes open: %s" % int(cso['minutes']) + "<br>"
+        for ts in cso['timestamps']:
+            popup += ts + "<br>"
+        csos[index]['popup'] = popup
+
     return csos
