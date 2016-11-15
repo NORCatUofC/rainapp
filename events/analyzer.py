@@ -3,6 +3,7 @@ import os
 from datetime import timedelta
 import pandas as pd
 
+from csos.models import RiverOutfall
 from rainapp.settings import BASE_DIR
 
 
@@ -72,3 +73,29 @@ def build_flooding_data(flooding_df):
     flooding_data['zip'] = flooding_df[flooding_df['unit_type'] == 'zip'].sort_values('label').to_dict("record")
 
     return flooding_data
+
+
+def build_csos(csos_df):
+    csos_df['duration'] = (csos_df['close_time'] - csos_df['open_time'])
+    csos_df['duration'] = csos_df['duration'].apply(lambda x: x.seconds / 60)
+    # ret_val['sewage_river'] = "%s minutes" % int(csos_df['duration'].sum())
+
+    river_outfall_ids = csos_df['river_outfall_id'].unique()
+    river_outfall_ids = list(river_outfall_ids)
+    river_outfalls = pd.DataFrame(list(RiverOutfall.objects.filter(
+        id__in=river_outfall_ids,
+        lat__isnull=False
+    ).values()))
+
+    river_outfalls['minutes'] = 0
+    river_outfalls['radius'] = 200
+    river_outfalls = river_outfalls.set_index('id')
+    csos = river_outfalls.to_dict('index')
+
+    for index_iter, cso in csos_df.iterrows():
+        try:
+            csos[cso['river_outfall_id']]['minutes'] += cso['duration']
+        except Exception as e:
+            # There are some overflows, where we don't have the geography point for it.  Skip them
+            pass
+    return csos

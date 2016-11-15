@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from csos.models import RiverCso, RiverOutfall
-from events.analyzer import rainfall_graph, find_n_years, build_flooding_data
+from events.analyzer import rainfall_graph, find_n_years, build_flooding_data, build_csos
 from events.models import HourlyPrecip, NYearEvent
 from flooding.models import BasementFloodingEvent
 
@@ -64,18 +64,8 @@ def show_date(request, start_stamp, end_stamp):
 
         if len(csos_df) > 0:
 
-            csos_df['duration'] = (csos_df['close_time'] - csos_df['open_time'])
-            ret_val['sewage_river'] = "%s minutes" % int(csos_df['duration'].sum().seconds / 60)
-
-            river_outfall_ids = csos_df['river_outfall_id'].unique()
-            river_outfall_ids = list(river_outfall_ids)
-            river_outfalls = RiverOutfall.objects.filter(
-                id__in=river_outfall_ids,
-                lat__isnull=False
-            )
-
-            for river_outfall in river_outfalls:
-                csos.append({'lat': river_outfall.lat, 'lon': river_outfall.lon, 'radius': 200})
+            csos_dict = build_csos(csos_df)
+            csos = list(csos_dict.values())
 
         cso_map = {'cso_points': csos}
         graph_data['cso_map'] = cso_map
@@ -91,7 +81,7 @@ def show_date(request, start_stamp, end_stamp):
             ret_val['basement_flooding'] = 0
         ret_val['graph_data'] = graph_data
 
-    except:
+    except Exception as e:
         return index(request)
 
     ret_val['hourly_precip'] = str(hourly_precip_df.head())
