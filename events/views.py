@@ -2,8 +2,7 @@ import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from csos.models import RiverCso, RiverOutfall
-from events.analyzer import rainfall_graph, find_n_years, build_flooding_data, build_csos
+from events.analyzer import rainfall_graph, find_n_years, build_flooding_data, build_cso_map
 from events.models import HourlyPrecip, NYearEvent
 from flooding.models import BasementFloodingEvent
 
@@ -56,10 +55,7 @@ def show_date(request, start_stamp, end_stamp):
 
         ret_val['sewage_river'] = 'None'
 
-        cso_points = build_csos(start, end)
-
-        cso_map = {'cso_points': cso_points}
-        graph_data['cso_map'] = cso_map
+        ret_val['cso_map'] = build_cso_map(start, end)
 
         flooding_df = pd.DataFrame(
             list(BasementFloodingEvent.objects.filter(date__gte=start).filter(date__lte=end).values()))

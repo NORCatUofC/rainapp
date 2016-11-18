@@ -76,7 +76,7 @@ def build_flooding_data(flooding_df):
     return flooding_data
 
 
-def build_csos(start, end):
+def build_cso_map(start, end):
     cso_events = RiverCso.objects.filter(open_time__range=(start, end)).values() | RiverCso.objects.filter(
         close_time__range=(start, end)).values() | RiverCso.objects.filter(open_time__lte=start).filter(
         close_time__gte=end).values()
@@ -120,4 +120,21 @@ def build_csos(start, end):
             int(cso_outfall_event['minutes'])) + '<br>' + cso_outfall_event['popup']
         cso_points.append(cso_outfall_event)
 
-    return cso_points
+    legend_rows = [
+        {'color': 'red', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[75])},
+        {'color': 'orange', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[50])},
+        {'color': 'green', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[25])},
+        {'color': 'blue', 'text': 'Less than %s, but more than 0' % convert_minutes_to_hours_text(percentiles[25])}
+    ]
+
+    return {'cso_points': cso_points, 'num_cso_locations': len(cso_points), 'legend_rows': legend_rows}
+
+
+def convert_minutes_to_hours_text(minutes):
+    minutes = int(minutes)
+    if minutes < 60:
+        return "%s minutes" % minutes
+    ret_val = str(int(minutes / 60)) + ' hours'
+    if minutes % 60 != 0:
+        ret_val += ', %s minutes' % str(int(minutes % 60))
+    return ret_val

@@ -68,9 +68,20 @@
 
     </div>
     <div class="container" style="margin-top:50px;">
-        <div class="col-md-8 col-md-offset-2">
-            <h2 style="text-align:center;">Sewage Dumped in the River</h2>
-            <div id="csoMap"></div>
+        <h2 style="text-align:center;">Sewage Dumped in the River: {{ cso_map.num_cso_locations }} Locations</h2>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <table class="table table-condensed" style="color:white;text-align:center;width:auto;float:right;margin-top:50px;">
+                    {% for legend_row in cso_map.legend_rows %}
+                    <tr>
+                        <td bgcolor="{{ legend_row.color }}">{{ legend_row.text }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-8">
+                <div id="csoMap"></div>
+            </div>
         </div>
     </div>
 
@@ -111,7 +122,8 @@
     <script src="{% static 'js/csoMap.js' %}"></script>
     <script>
         var csoMap = L.map('csoMap').setView([41.8801, -87.6268], 9);
-        drawCsoMap(graphData['cso_map'], csoMap);
+        var csoMapData = {{ cso_map | jsonify }};
+        drawCsoMap(csoMapData, csoMap);
     </script>
 
     <script src="{% static 'js/floodingBar.js' %}"></script>
