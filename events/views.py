@@ -23,7 +23,7 @@ def show_date(request, start_stamp, end_stamp):
         if start > end:
             return HttpResponse("Start time must before end time")
 
-        if (end-start).days > 10:
+        if (end - start).days > 10:
             return HttpResponse("Search only on 10 day periods")
 
     except:
@@ -93,14 +93,33 @@ def one_hundred_year(request):
 
     return render(request, 'one_hundred_year.html', ret_val)
 
+
 def viz_animation(request):
     return render(request, 'viz.html')
+
 
 def basement_flooding(request):
     return render(request, 'flooding.html')
 
+
 def viz_splash(request):
     return render(request, 'viz-splash.html')
 
+
 def about(request):
     return render(request, 'about.html')
+
+
+def nyear(request):
+    events_db = NYearEvent.objects.all()
+    storm_intervals = [1, 2, 5, 10, 25, 50, 100]
+    events = {n: [] for n in storm_intervals}
+    for event in events_db:
+        date_formatted = event.start_time.strftime("%m/%d/%Y") + "-" + event.end_time.strftime("%m/%d/%Y")
+        duration = str(event.duration_hours) + ' hours' if event.duration_hours <= 24 else str(
+            int(event.duration_hours / 24)) + ' days'
+        events[event.n].append({'date_formatted': date_formatted, 'inches': "%.2f" % event.inches,
+                                'duration_formatted': duration,
+                                'event_url': '/date/%s/%s' % (event.start_time, event.end_time)})
+
+    return render(request, 'nyear.html', {'nyear_events': events, 'storm_intervals': storm_intervals})
