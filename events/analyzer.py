@@ -1,10 +1,11 @@
 import operator
 import os
 from datetime import timedelta
-import pandas as pd
 
-from csos.models import RiverOutfall
+import pandas as pd
+from csos.models import RiverOutfall, RiverCso
 from rainapp.settings import BASE_DIR
+import numpy as np
 
 
 def rainfall_graph(hourly_precip_df):
@@ -75,38 +76,48 @@ def build_flooding_data(flooding_df):
     return flooding_data
 
 
-def build_csos(csos_df):
-    csos_df['duration'] = (csos_df['close_time'] - csos_df['open_time'])
-    csos_df['duration'] = csos_df['duration'].apply(lambda x: x.seconds / 60)
-    # ret_val['sewage_river'] = "%s minutes" % int(csos_df['duration'].sum())
+def build_csos(start, end):
+    cso_events = RiverCso.objects.filter(open_time__range=(start, end)).values() | RiverCso.objects.filter(
+        close_time__range=(start, end)).values() | RiverCso.objects.filter(open_time__lte=start).filter(
+        close_time__gte=end).values()
 
-    river_outfall_ids = csos_df['river_outfall_id'].unique()
-    river_outfall_ids = list(river_outfall_ids)
-    river_outfalls = pd.DataFrame(list(RiverOutfall.objects.filter(
-        id__in=river_outfall_ids,
-        lat__isnull=False
-    ).values()))
+    cso_outfall_events = {ro['id']: ro for ro in RiverOutfall.objects.all().values()}
+    durations = []
 
-    river_outfalls['minutes'] = 0
-    river_outfalls['radius'] = 200
-    river_outfalls = river_outfalls.set_index('id')
-    csos = river_outfalls.to_dict('index')
+    for cso_event in cso_events:
+        river_outfall_id = cso_event['river_outfall_id']
+        duration = (cso_event['close_time'] - cso_event['open_time']).total_seconds() / 60
+        if "minutes" not in cso_outfall_events[river_outfall_id]:
+            cso_outfall_events[river_outfall_id]['minutes'] = 0
+        cso_outfall_events[river_outfall_id]['minutes'] += duration
+        durations.append(duration)
+        if "popup" not in cso_outfall_events[river_outfall_id]:
+            cso_outfall_events[river_outfall_id]['popup'] = ""
+        cso_outfall_events[river_outfall_id]['popup'] += cso_event['open_time'].strftime('%m/%d %H:%M') + '-' + \
+                                                         cso_event['close_time'].strftime('%m/%d %H:%M') + '<BR>'
 
-    for index_iter, cso in csos_df.iterrows():
-        try:
-            csos[cso['river_outfall_id']]['minutes'] += cso['duration']
-            if 'timestamps' not in csos[cso['river_outfall_id']]:
-                csos[cso['river_outfall_id']]['timestamps'] = []
-            csos[cso['river_outfall_id']]['timestamps'].append(str(cso['open_time']) + '-' + str(cso['close_time']))
-        except Exception as e:
-            # There are some overflows, where we don't have the geography point for it.  Skip them
-            pass
+    durations.sort()
+    # durations_split = np.split(durations, 4)
 
-    csos = list(csos.values())
-    for index, cso in enumerate(csos):
-        popup = "Total minutes open: %s" % int(cso['minutes']) + "<br>"
-        for ts in cso['timestamps']:
-            popup += ts + "<br>"
-        csos[index]['popup'] = popup
+    percentiles = {25: np.percentile(durations, 25), 50: np.percentile(durations, 50), 75: np.percentile(durations, 75)}
 
-    return csos
+    cso_points = []
+    for coe_id in cso_outfall_events:
+        cso_outfall_event = cso_outfall_events[coe_id]
+        if "minutes" not in cso_outfall_event:  # Skip outfall points without an overflow
+            continue
+        if cso_outfall_event['minutes'] < percentiles[25]:
+            cso_outfall_event['color'] = 'blue'
+        elif cso_outfall_event['minutes'] <= percentiles[50]:
+            cso_outfall_event['color'] = 'green'
+        elif cso_outfall_event['minutes'] <= percentiles[75]:
+            cso_outfall_event['color'] = 'orange'
+        else:
+            cso_outfall_event['color'] = 'red'
+
+        cso_outfall_event['radius'] = 300
+        cso_outfall_event['popup'] = cso_outfall_event['name'] + '<br>' + "Minutes: " + str(
+            int(cso_outfall_event['minutes'])) + '<br>' + cso_outfall_event['popup']
+        cso_points.append(cso_outfall_event)
+
+    return cso_points

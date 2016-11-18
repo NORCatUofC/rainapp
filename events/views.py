@@ -54,16 +54,11 @@ def show_date(request, start_stamp, end_stamp):
 
         graph_data = {'total_rainfall_data': rainfall_graph(hourly_precip_df)}
 
-        csos_db = RiverCso.objects.filter(open_time__range=(start, end)).values() | RiverCso.objects.filter(
-            close_time__range=(start, end)).values()
-
-        csos_df = pd.DataFrame(list(csos_db))
-
         ret_val['sewage_river'] = 'None'
 
-        csos = build_csos(csos_df) if len(csos_df) > 0 else []
+        cso_points = build_csos(start, end)
 
-        cso_map = {'cso_points': csos}
+        cso_map = {'cso_points': cso_points}
         graph_data['cso_map'] = cso_map
 
         flooding_df = pd.DataFrame(
@@ -78,7 +73,7 @@ def show_date(request, start_stamp, end_stamp):
         ret_val['graph_data'] = graph_data
 
     except Exception as e:
-        return index(request)
+        return HttpResponse("Boom: ")
 
     ret_val['hourly_precip'] = str(hourly_precip_df.head())
     return render(request, 'show_event.html', ret_val)
