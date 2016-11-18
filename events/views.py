@@ -75,8 +75,8 @@ def show_date(request, start_stamp, end_stamp):
     return render(request, 'show_event.html', ret_val)
 
 
-def nyear(request, recurrence):
-    recurrence = int(recurrence)
+def one_hundred_year(request):
+    recurrence = 100
     ret_val = {'recurrence': recurrence, 'likelihood': str(int(1 / int(recurrence) * 100)) + '%'}
 
     events = []
@@ -91,7 +91,7 @@ def nyear(request, recurrence):
     ret_val['events'] = events
     ret_val['num_occurrences'] = len(events)
 
-    return render(request, 'nyear.html', ret_val)
+    return render(request, 'one_hundred_year.html', ret_val)
 
 def viz_animation(request):
     return render(request, 'viz.html')
