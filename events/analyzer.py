@@ -81,6 +81,9 @@ def build_cso_map(start, end):
         close_time__range=(start, end)).values() | RiverCso.objects.filter(open_time__lte=start).filter(
         close_time__gte=end).values()
 
+    if len(cso_events) == 0:
+        return {'cso_points': [], 'num_cso_locations': 0, 'legend_rows': []}
+
     cso_outfall_events = {ro['id']: ro for ro in RiverOutfall.objects.all().values()}
     durations = []
 
