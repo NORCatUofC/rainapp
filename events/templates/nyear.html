@@ -129,7 +129,11 @@
 
         var nyearTable = {{ nyear_events | jsonify }};
         setupNYearTable(nyearTable);
-        drawNYearChart();
+
+        var nyearThresholds = {{ n_year_thresholds | jsonify }};
+
+        var initialDurations = stormsForInches(3, nyearThresholds);
+        drawNYearChart(nyearThresholds.recurrence_intervals, initialDurations);
 
     </script>
 {% endblock %}

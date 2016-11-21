@@ -1,41 +1,31 @@
-function drawNYearChart() {
+function drawNYearChart(recurrenceIntervals, initialDurations) {
     Highcharts.chart('nYearInteractive', {
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Monthly Average Rainfall'
+            text: 'How fast rain must fall to have an n-year event'
         },
         subtitle: {
-            text: 'Source: WorldClimate.com'
+            text: 'Source: <a href="#">ISWS</a>'
         },
         xAxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ],
+            categories: recurrenceIntervals,
             crosshair: true
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Rainfall (mm)'
+                text: 'Rain Duration (hrs)'
             }
+        },
+        legend: {
+            enabled: false
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:.1f} hours</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -47,21 +37,45 @@ function drawNYearChart() {
             }
         },
         series: [{
-            name: 'Tokyo',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-
-        }, {
-            name: 'New York',
-            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-
-        }, {
-            name: 'London',
-            data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
-
-        }, {
-            name: 'Berlin',
-            data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
-
-        }]
+            name: 'Rain Duration',
+            data: initialDurations
+        }],
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: false
+        }
     });
+}
+
+function stormsForInches(inches, thresholds) {
+    var removeThis = true;
+    var retVal = [];
+    for (var recurrence in thresholds.recurrence_intervals) {
+        var recurrence_interval = thresholds.recurrence_intervals[recurrence];
+        var threshold_boundaries = thresholds['boundaries'][recurrence_interval];
+
+        var duration = 0;
+        // var valueAdded = false;
+        for (var duration_idx in thresholds.durations) {
+            var duration_hrs = thresholds.durations[duration_idx];
+            var boundary_inches = threshold_boundaries[duration_hrs];
+            if (inches > boundary_inches) {
+                if (duration_idx == 0) {
+                    duration = duration_hrs;
+                }
+                else {
+                    var prev_duration_hrs = thresholds.durations[duration_idx - 1];
+                    var a = (prev_duration_hrs - duration_hrs) /
+                        (threshold_boundaries[prev_duration_hrs] - threshold_boundaries[duration_hrs]);
+                    var b = duration_hrs - (a * threshold_boundaries[duration_hrs]);
+                    duration = (a * inches) + b;
+                }
+                break;
+            }
+        }
+        retVal.push(duration);
+    }
+    return retVal;
 }

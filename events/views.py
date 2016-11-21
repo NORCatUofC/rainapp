@@ -127,10 +127,27 @@ def nyear(request):
 
     thresh_dir = os.path.join(BASE_DIR, 'events', 'raw_data', 'n_year_definitions.csv')
     n_year_threshes = pd.read_csv(thresh_dir)
+
+    dur_str_to_hours = {
+        '1-hr': 1.0,
+        '2-hr': 2.0,
+        '3-hr': 3.0,
+        '6-hr': 6.0,
+        '12-hr': 12.0,
+        '18-hr': 18.0,
+        '24-hr': 24.0,
+        '48-hr': 48.0,
+        '72-hr': 72.0,
+        '5-day': 5 * 24.0,
+        '10-day': 10 * 24.0
+    }
+
+    n_year_threshes['Duration'] = n_year_threshes['Duration'].apply(lambda x: str(int(dur_str_to_hours[x])))
     n_year_threshes = n_year_threshes.set_index('Duration')
 
     n_year_thresholds = {'durations': list(n_year_threshes.index.values),
-                         'boundaries': n_year_threshes.to_dict('record')}
+                         'boundaries': n_year_threshes.to_dict('dict'),
+                         'recurrence_intervals': list(n_year_threshes.columns)}
 
     return render(request, 'nyear.html', {'nyear_events': events, 'storm_intervals': storm_intervals,
                                           'n_year_thresholds': n_year_thresholds})
