@@ -1,3 +1,4 @@
+var thresholds = {};
 function drawNYearChart(recurrenceIntervals, initialDurations) {
     Highcharts.chart('nYearInteractive', {
         chart: {
@@ -49,7 +50,8 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
     });
 }
 
-function stormsForInches(inches, thresholds) {
+function stormsForInches(inches, argThresholds) {
+    thresholds = argThresholds;
     var removeThis = true;
     var retVal = [];
     for (var recurrence in thresholds.recurrence_intervals) {
@@ -78,4 +80,19 @@ function stormsForInches(inches, thresholds) {
         retVal.push(duration);
     }
     return retVal;
+}
+
+function updateInches(newInches) {
+    newInches = newInches.toFixed(2);
+    var chartType = $(this)[0].id;
+    var chart = $('#nYearInteractive').highcharts();
+    chart.update({
+        series: [{
+            data: stormsForInches(newInches, thresholds)
+        }],
+        title: {
+            text: 'How fast ' + newInches + ' inches of rain must fall to have an n-year event'
+        }
+    });
+
 }

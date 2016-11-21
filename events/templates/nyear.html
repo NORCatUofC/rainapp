@@ -4,6 +4,8 @@
 
 {% block content %}
 
+    <link rel="stylesheet" href="{% static 'loopj-slider/css/simple-slider.css' %}"/>
+
     <div class="container">
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-0">
@@ -36,6 +38,7 @@
                 </p>
             </div>
             <div class="col-sm-6">
+                <input type="text" data-slider="true" value="3.0" data-slider-range="0,9" data-slider-step="0.1">
                 <div id="nYearInteractive"></div>
             </div>
         </div>
@@ -123,6 +126,7 @@
     <script src="{% static 'js/nyearTable.js' %}"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static 'loopj-slider/js/simple-slider.min.js' %}"></script>
     <script src="{% static 'js/nyearChart.js' %}"></script>
 
     <script>
@@ -131,6 +135,20 @@
         setupNYearTable(nyearTable);
 
         var nyearThresholds = {{ n_year_thresholds | jsonify }};
+
+        $("[data-slider]")
+                .each(function () {
+                    var input = $(this);
+                    $("<span>")
+                            .addClass("output")
+                            .insertAfter($(this));
+                })
+                .bind("slider:ready slider:changed", function (event, data) {
+                    $(this)
+                            .nextAll(".output:first")
+                            .html(data.value.toFixed(3));
+                    updateInches(data.value);
+                });
 
         var initialDurations = stormsForInches(3, nyearThresholds);
         drawNYearChart(nyearThresholds.recurrence_intervals, initialDurations);
