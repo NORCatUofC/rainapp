@@ -5,6 +5,45 @@
 {% block content %}
 
     <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-0">
+                <h2 style='text-align: center;'>The <a href="#">Chicago Climate Action Plan</a> states that we can
+                    expect heavier rainfalls --
+                </h2>
+            </div>
+            <div class="col-sm-10 col-sm-offset-1 col-md-9 col-md-offset-2">
+                <h4>
+                    making travel more dangerous, flooding basements, polluting Lake Michigan and
+                    the Chicago River, and stressing the city's infrastructure.</h4>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 25px;">
+        <div class="row">
+            <h3>What is a heavy rainfall?</h3>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-sm-6">
+                <p>
+                    When designing things like buildings, roads, and sewer systems, engineers use n-year storms
+                    to model what would happen under various types of storms. To do this, they use the
+                    n-year rain storm, which defines the probability that a given event will happen in a given
+                    year. For example a 5-year event has a 1/5 or 20% chance of occurring in a given year.
+                </p>
+                <p>
+                    3 inches in a day is no big deal. 3 inches in an hour is overwhelming. So the time it takes
+                    for the rain to come. Rain intensity is inches per hour/day.
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <div id="nYearInteractive"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container">
         <h1 style="text-align: center;">The 100-Year Storm</h1>
         <h3 style="text-align: center">3 inches in a day is no big deal. 3 inches in an hour,<br> well that is
             overwhelming!</h3>
@@ -34,7 +73,9 @@
             <table class="table table-condensed" id="nyearTable"></table>
             <div class="row">
                 {% for storm_interval in storm_intervals %}
-                    <button type="button" class="btn btn-warning" onclick="drawNYearTable({{ storm_interval }})">{{ storm_interval }}-Year</button>
+                    <button type="button" class="btn btn-warning"
+                            onclick="drawNYearTable({{ storm_interval }})">{{ storm_interval }}-Year
+                    </button>
                 {% endfor %}
             </div>
         </div>
@@ -77,10 +118,18 @@
     </div>
 
 {% endblock %}
+
 {% block scripts %}
     <script src="{% static 'js/nyearTable.js' %}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static 'js/nyearChart.js' %}"></script>
+
     <script>
+
         var nyearTable = {{ nyear_events | jsonify }};
         setupNYearTable(nyearTable);
+        drawNYearChart();
+
     </script>
 {% endblock %}

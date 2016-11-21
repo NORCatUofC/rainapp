@@ -127,7 +127,7 @@ def build_cso_map(start, end):
         {'color': 'red', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[75])},
         {'color': 'orange', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[50])},
         {'color': 'green', 'text': 'More than %s' % convert_minutes_to_hours_text(percentiles[25])},
-        {'color': 'blue', 'text': 'Less than %s, but more than 0' % convert_minutes_to_hours_text(percentiles[25])}
+        {'color': 'blue', 'text': 'More than 0'}
     ]
 
     return {'cso_points': cso_points, 'num_cso_locations': len(cso_points), 'legend_rows': legend_rows}

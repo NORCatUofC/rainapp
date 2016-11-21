@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -5,6 +7,7 @@ from django.shortcuts import render
 from events.analyzer import rainfall_graph, find_n_years, build_flooding_data, build_cso_map
 from events.models import HourlyPrecip, NYearEvent
 from flooding.models import BasementFloodingEvent
+from rainapp.settings import BASE_DIR
 
 
 def index(request):
@@ -122,4 +125,12 @@ def nyear(request):
                                 'duration_formatted': duration,
                                 'event_url': '/date/%s/%s' % (event.start_time, event.end_time)})
 
-    return render(request, 'nyear.html', {'nyear_events': events, 'storm_intervals': storm_intervals})
+    thresh_dir = os.path.join(BASE_DIR, 'events', 'raw_data', 'n_year_definitions.csv')
+    n_year_threshes = pd.read_csv(thresh_dir)
+    n_year_threshes = n_year_threshes.set_index('Duration')
+
+    n_year_thresholds = {'durations': list(n_year_threshes.index.values),
+                         'boundaries': n_year_threshes.to_dict('record')}
+
+    return render(request, 'nyear.html', {'nyear_events': events, 'storm_intervals': storm_intervals,
+                                          'n_year_thresholds': n_year_thresholds})
