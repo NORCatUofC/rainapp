@@ -1,4 +1,5 @@
 var thresholds = {};
+var inches = 3;
 function drawNYearChart(recurrenceIntervals, initialDurations) {
     Highcharts.chart('nYearInteractive', {
         chart: {
@@ -34,7 +35,24 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
         plotOptions: {
             column: {
                 pointPadding: 0.2,
-                borderWidth: 0
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    formatter: function () {
+                        if (this.y > 0) {
+                            return this.y;
+                        }
+                        else if (inches < thresholds.boundaries[this.x][1]) {
+                            return "Not enough rain";
+                        }
+                        else if (inches > thresholds.boundaries[this.x][240]) {
+                            return "Less than 1 hour";
+                        }
+                        a = thresholds.boundaries[this.x][1];
+                        b = thresholds.boundaries[this.x][thresholds.boundaries[this.x][240]];
+                        return 'Uh oh';
+                    }
+                }
             }
         },
         series: [{
@@ -50,8 +68,9 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
     });
 }
 
-function stormsForInches(inches, argThresholds) {
+function stormsForInches(inchesArg, argThresholds) {
     thresholds = argThresholds;
+    inches = inchesArg;
     var removeThis = true;
     var retVal = [];
     for (var recurrence in thresholds.recurrence_intervals) {
@@ -65,7 +84,7 @@ function stormsForInches(inches, argThresholds) {
             var boundary_inches = threshold_boundaries[duration_hrs];
             if (inches > boundary_inches) {
                 if (duration_idx == 0) {
-                    duration = duration_hrs;
+                    duration = 0;
                 }
                 else {
                     var prev_duration_hrs = thresholds.durations[duration_idx - 1];
@@ -73,11 +92,12 @@ function stormsForInches(inches, argThresholds) {
                         (threshold_boundaries[prev_duration_hrs] - threshold_boundaries[duration_hrs]);
                     var b = duration_hrs - (a * threshold_boundaries[duration_hrs]);
                     duration = (a * inches) + b;
+                    duration = duration.toFixed(2);
                 }
                 break;
             }
         }
-        retVal.push(duration);
+        retVal.push(parseInt(duration));
     }
     return retVal;
 }
