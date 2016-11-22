@@ -136,19 +136,9 @@
 
         var nyearThresholds = {{ n_year_thresholds | jsonify }};
 
-        $("[data-slider]")
-                .each(function () {
-                    var input = $(this);
-                    $("<span>")
-                            .addClass("output")
-                            .insertAfter($(this));
-                })
-                .bind("slider:ready slider:changed", function (event, data) {
-                    $(this)
-                            .nextAll(".output:first")
-                            .html(data.value.toFixed(3));
-                    updateInches(data.value);
-                });
+        $("[data-slider]").bind("slider:ready slider:changed", function (event, data) {
+            updateInches(data.value);
+        });
 
         var initialDurations = stormsForInches(3, nyearThresholds);
         drawNYearChart(nyearThresholds.recurrence_intervals, initialDurations);
