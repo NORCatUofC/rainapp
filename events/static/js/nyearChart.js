@@ -43,8 +43,11 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
                 dataLabels: {
                     enabled: true,
                     formatter: function () {
-                        if (this.y > 0) {
-                            return this.y;
+                        if (this.y > 1) {
+                            return this.y + ' hours';
+                        }
+                        else if (this.y == 1) {
+                            return '1 hour';
                         }
                         else if (inches < thresholds.boundaries[this.x][1]) {
                             return "Not enough rain";
@@ -52,8 +55,6 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
                         else if (inches > thresholds.boundaries[this.x][240]) {
                             return "Less than 1 hour";
                         }
-                        a = thresholds.boundaries[this.x][1];
-                        b = thresholds.boundaries[this.x][thresholds.boundaries[this.x][240]];
                         return 'Uh oh';
                     }
                 }

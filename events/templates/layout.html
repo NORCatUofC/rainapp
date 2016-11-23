@@ -33,6 +33,8 @@
         integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous"> -->
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
   <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
 </head>
 <body>
@@ -53,7 +55,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="/nyear">Heavy Storms</a></li>
+                <li><a href="{% url 'nyear' %}">Heavy Storms</a></li>
                 <li><a href="{% url 'basement_flooding' %}">Basement Flooding</a></li>
                 <!-- <li><a href="/csos/reversals">Sewage in Lake Michigan</a></li> -->
                 <li><a href="{% url 'show_data' %}">Events In Time</a></li>

@@ -78,25 +78,6 @@ def show_date(request, start_stamp, end_stamp):
     return render(request, 'show_event.html', ret_val)
 
 
-def one_hundred_year(request):
-    recurrence = 100
-    ret_val = {'recurrence': recurrence, 'likelihood': str(int(1 / int(recurrence) * 100)) + '%'}
-
-    events = []
-    events_db = NYearEvent.objects.filter(n=recurrence)
-    for event in events_db:
-        date_formatted = event.start_time.strftime("%m/%d/%Y") + "-" + event.end_time.strftime("%m/%d/%Y")
-        duration = str(event.duration_hours) + ' hours' if event.duration_hours <= 24 else str(
-            int(event.duration_hours / 24)) + ' days'
-        events.append({'date_formatted': date_formatted, 'inches': "%.2f" % event.inches,
-                       'duration_formatted': duration,
-                       'event_url': '/date/%s/%s' % (event.start_time, event.end_time)})
-    ret_val['events'] = events
-    ret_val['num_occurrences'] = len(events)
-
-    return render(request, 'one_hundred_year.html', ret_val)
-
-
 def viz_animation(request):
     return render(request, 'viz.html')
 
