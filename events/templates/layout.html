@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% load staticfiles %}
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
-  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
-  <title>Chicago Rain</title>
-  <meta charset='utf-8' />
-  <!-- Placeholder metadata -->
-  <meta content="Visualizing the impact of increasing rain intensity across Chicago." name='description' />
-  <!-- Facebook metadata -->
-  <meta content="Chicago Rain" property="og:site_name">
-  <meta content="Chicago Rain" property="og:title">
-  <meta content="website" property="og:type">
-  <meta content="Visualizing the impact of increasing rain intensity across Chicago." property="og:description">
-  <meta content="http://chicagorains.herokuapp.com/" property="og:url">
-  <!-- <meta content="{{ site.url }}{{ site.baseurl }}/img/logo.png" property="og:image"> -->
-  <!-- Twitter metadata -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="Chicago Rain">
-  <!-- <meta name="twitter:creator" content="NORC at the University of Chicago"> -->
-  <meta name="twitter:title" content="Chicago Rain">
-  <meta name="twitter:url" content="http://chicagorains.herokuapp.com/">
-  <meta name="twitter:description" content="Visualizing the impact of increasing rain intensity across Chicago.">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <title>Chicago Rain</title>
+    <meta charset='utf-8'/>
+    <!-- Placeholder metadata -->
+    <meta content="Visualizing the impact of increasing rain intensity across Chicago." name='description'/>
+    <!-- Facebook metadata -->
+    <meta content="Chicago Rain" property="og:site_name">
+    <meta content="Chicago Rain" property="og:title">
+    <meta content="website" property="og:type">
+    <meta content="Visualizing the impact of increasing rain intensity across Chicago." property="og:description">
+    <meta content="http://chicagorains.herokuapp.com/" property="og:url">
+    <!-- <meta content="{{ site.url }}{{ site.baseurl }}/img/logo.png" property="og:image"> -->
+    <!-- Twitter metadata -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="Chicago Rain">
+    <!-- <meta name="twitter:creator" content="NORC at the University of Chicago"> -->
+    <meta name="twitter:title" content="Chicago Rain">
+    <meta name="twitter:url" content="http://chicagorains.herokuapp.com/">
+    <meta name="twitter:description" content="Visualizing the impact of increasing rain intensity across Chicago.">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700" rel="stylesheet">
-  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous"> -->
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700" rel="stylesheet">
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -65,7 +66,7 @@
     </div>
 </nav>
 <div class="container-fluid main-container">
-{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -74,5 +75,23 @@
         crossorigin="anonymous">
 </script>
 {% block scripts %}{% endblock %}
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-87925666-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
 </body>
 </html>
