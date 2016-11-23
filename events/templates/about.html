@@ -2,13 +2,44 @@
 {% load static %}
 
 {% block content %}
-<div class="col-md-6 col-md-offset-3">
+    <div class="container">
+        <div class="col-sm-6" style="margin-top:40px;">
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-10 col-sm-offset-1">
+                    <a href="http://www.norc.org" target="_blank">
+                        <img src="{% static 'images/norc_logo_color.png' %}" class="img-responsive"/>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <h3 style="text-align: center;">Chicago Rains is an open source, open data science project facilitated
+                    by <a
+                            href="http://www.norc.org"
+                            target="_blank">NORC at the University of Chicago</a>.</h3>
+            </div>
 
-  <h3>Chicago Rains is an open source, open data science project facilitated by <a href="http://www.norc.org"
-  target="_blank">NORC at the University of Chicago</a>.</h3>
-    <h4>This project hosted on <a href="https://github.com/NORCatUofC/rain" target="_blank">GitHub</a>.</h4>
-    The main data analysis
-  repo is at <a href="https://github.com/NORCatUofC/rain" target="_blank">NORCatUofC/rain</a>
-  on GitHub, and anyone is welcome to suggest ideas or contribute directly.</h3>
-</div>
+        </div>
+        <div class="col-sm-6" style="margin-top:35px;">
+            <div class="row">
+                <div class="col-xs-2 col-xs-offset-5 col-sm-2 col-sm-offset-5">
+                    <a href="https://github.com/NORCatUofC/rain" target="_blank">
+                        <i class="fa fa-github-alt fa-5x" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <h3 style="text-align: center;">
+                    Check out our work on
+                    <a href="https://github.com/NORCatUofC/rain" target="_blank">GitHub</a>. Pull requests welcome!
+                </h3>
+            </div>
+
+        </div>
+    </div>
+    <div class="container" style="margin-top:60px;">
+        <h5 style="text-align: center;">ChicagoRains is provided under the <a href="https://opensource.org/licenses/MIT" target="_blank">
+            MIT open source license</a></h5>
+    </div>
+
+
 {% endblock %}
