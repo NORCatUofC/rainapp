@@ -215,7 +215,7 @@ path.precip-data {
 path.call-data {
   stroke: #c91a1a;
 }
-path.cso-data {
+.time-chart g path.cso-data {
   stroke: #f39c12;
 }
 
