@@ -39,7 +39,8 @@
                 </p>
             </div>
             <div class="col-sm-6 col-md-6 col-md-offset-1">
-                <input type="text" data-slider="true" value="3.0" data-slider-range="0,14" data-slider-step="0.1" id="nyearSlider">
+                <input type="text" data-slider="true" value="3.0" data-slider-range="0,14" data-slider-step="0.1"
+                       id="nyearSlider">
                 <div id="nYearInteractive"></div>
             </div>
         </div>
@@ -61,15 +62,19 @@
                 <table class="table table-condensed" id="nyearTable"></table>
                 <div id="placeForPaginationBtn"></div>
                 <div class="row" style="margin-top:18px;">
-                    <h5 style="color:blue;">See other n-year storms:</h5>
-                    {% for storm_interval in storm_intervals %}
-                        <div class="col-xs-4 col-sm-3" style="margin-top:6px;">
-                            <button type="button" class="btn btn-warning"
-                                    onclick="drawNYearTable({{ storm_interval }}, false)"
-                                    style="width:100%">{{ storm_interval }}-Year
+
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                See other n-year storms
+                                <span class="caret"></span>
                             </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="nyearDropdown">
+                                {% for storm_interval in storm_intervals reversed %}
+                                    <li style="padding:6px;"><span onclick="drawNYearTable({{ storm_interval }}, false)">{{ storm_interval }}-Year</span></li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
