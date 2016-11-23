@@ -12,9 +12,6 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
         title: {
             text: 'How fast rain must fall to have an n-year event'
         },
-        subtitle: {
-            text: 'Source: <a href="#">ISWS</a>'
-        },
         xAxis: {
             categories: recurrenceIntervals,
             crosshair: true
