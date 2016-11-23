@@ -1,5 +1,9 @@
 var thresholds = {};
-var inches = 3;
+
+function setupChart(argThresholds){
+    thresholds = argThresholds;
+}
+
 function drawNYearChart(recurrenceIntervals, initialDurations) {
     Highcharts.chart('nYearInteractive', {
         chart: {
@@ -68,8 +72,8 @@ function drawNYearChart(recurrenceIntervals, initialDurations) {
     });
 }
 
-function stormsForInches(inchesArg, argThresholds) {
-    thresholds = argThresholds;
+function stormsForInches(inchesArg) {
+
     inches = inchesArg;
     var removeThis = true;
     var retVal = [];

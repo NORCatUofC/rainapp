@@ -39,7 +39,7 @@
                 </p>
             </div>
             <div class="col-sm-6 col-md-6 col-md-offset-1">
-                <input type="text" data-slider="true" value="3.0" data-slider-range="0,14" data-slider-step="0.1">
+                <input type="text" data-slider="true" value="3.0" data-slider-range="0,14" data-slider-step="0.1" id="nyearSlider">
                 <div id="nYearInteractive"></div>
             </div>
         </div>
@@ -88,7 +88,8 @@
             </div>
             <div class="col-sm-6 col-md-6 col-md-offset-1">
                 <h3>Tunnel and Reservoir Project</h3>
-                <img class="img-responsive" src="https://www.mwrd.org/irj/go/km/docs/documents/MWRD/internet/News&Media/Newsroom/Media/Coverage/img/2015/image_1215023.jpg">
+                <img class="img-responsive"
+                     src="https://www.mwrd.org/irj/go/km/docs/documents/MWRD/internet/News&Media/Newsroom/Media/Coverage/img/2015/image_1215023.jpg">
             </div>
         </div>
 
@@ -109,12 +110,15 @@
         setupNYearTable(nyearTable);
 
         var nyearThresholds = {{ n_year_thresholds | jsonify }};
+        setupChart(nyearThresholds);
+
+        const STARTING_INCHES = 3;
 
         $("[data-slider]").bind("slider:ready slider:changed", function (event, data) {
             updateInches(data.value);
         });
 
-        var initialDurations = stormsForInches(3, nyearThresholds);
+        var initialDurations = stormsForInches(STARTING_INCHES);
         drawNYearChart(nyearThresholds.recurrence_intervals, initialDurations);
 
     </script>
