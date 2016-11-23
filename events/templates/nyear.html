@@ -6,6 +6,17 @@
 
     <link rel="stylesheet" href="{% static 'loopj-slider/css/simple-slider.css' %}"/>
 
+    <style>
+        .slider {
+            width: 100%;
+        }
+
+    .slider > .dragger {
+        background: #7cb5ec;
+    }
+
+    </style>
+
     <div class="container">
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-0">
@@ -63,18 +74,20 @@
                 <div id="placeForPaginationBtn"></div>
                 <div class="row" style="margin-top:18px;">
 
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                See other n-year storms
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="nyearDropdown">
-                                {% for storm_interval in storm_intervals reversed %}
-                                    <li style="padding:6px;"><span onclick="drawNYearTable({{ storm_interval }}, false)">{{ storm_interval }}-Year</span></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            See other n-year storms
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="nyearDropdown">
+                            {% for storm_interval in storm_intervals reversed %}
+                                <li style="padding:6px;"><span
+                                        onclick="drawNYearTable({{ storm_interval }}, false)">{{ storm_interval }}-Year</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
