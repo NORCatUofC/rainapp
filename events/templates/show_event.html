@@ -121,7 +121,7 @@
     </script>
     <script src="{% static 'js/csoMap.js' %}"></script>
     <script>
-        var csoMap = L.map('csoMap').setView([41.8801, -87.6268], 9);
+        var csoMap = L.map('csoMap').setView([41.9101, -87.7668], 10);
         var csoMapData = {{ cso_map | jsonify }};
         drawCsoMap(csoMapData, csoMap);
     </script>
